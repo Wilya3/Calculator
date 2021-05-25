@@ -3,7 +3,7 @@ use yii\widgets\ActiveForm;
 use yii\helpers\HTML;
 ?>
 <h1>Регистрация</h1>
-<!--<a href="/web/index.php">Главная</a>-->
+<a href="/web/index.php?r=site%2Flogin">Вход</a>
 
 <div>
 	<?php

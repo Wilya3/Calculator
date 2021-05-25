@@ -2,6 +2,7 @@
 
 namespace app\controllers;
 
+use app\models\LoginForm;
 use app\models\SignupForm;
 use Yii;
 use yii\web\Controller;
@@ -20,5 +21,10 @@ class SiteController extends Controller {
 			}
 		}
 		return $this->render('signup', ['model' => $model]);
+	}
+
+	public function actionLogin() {
+		$model = new LoginForm();
+		return $this->render('login', ['model' => $model]);
 	}
 }
