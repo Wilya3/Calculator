@@ -6,8 +6,9 @@ namespace app\models;
 
 use yii\base\Model;
 
-/*
- * Form for table 'user' from DB 'calculator'
+/**
+ * Class SignupForm belongs 'user' table
+ * @package app\models
  */
 class SignupForm extends Model {
 
@@ -20,6 +21,8 @@ class SignupForm extends Model {
 			[['username', 'password', 'email'], 'required'],
 			[['username', 'email'], 'unique', 'targetClass' => 'app\models\User'],
 			['email', 'email'],
+            [['username'], 'string', 'max' => 30],
+            [['email'], 'string', 'max' => 255]
 		];
 	}
 

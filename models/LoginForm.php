@@ -6,6 +6,10 @@ namespace app\models;
 use \yii\base\Model;
 
 
+/**
+ * Class LoginForm works with 'user' table.
+ * @package app\models
+ */
 class LoginForm extends Model {
 
 	public $username;

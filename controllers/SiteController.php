@@ -13,6 +13,9 @@ class SiteController extends Controller {
 	public function actionIndex() {
 //	    var_dump(Yii::$app->user->identity);
 //	    die();
+        if (!Yii::$app->user->isGuest){
+            return $this->redirect(['app/index']);
+        }
 		return $this->render('index');
 	}
 
