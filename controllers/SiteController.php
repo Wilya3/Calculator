@@ -11,11 +11,17 @@ use yii\web\Controller;
 class SiteController extends Controller {
 
 	public function actionIndex() {
+//	    var_dump(Yii::$app->user->identity);
+//	    die();
 		return $this->render('index');
 	}
 
 	public function actionSignup() {
+        if (!Yii::$app->user->isGuest) {
+            return $this->redirect(['app/index']);
+        }
 		$model = new SignupForm();
+        //Registration
 		if ($model->load(Yii::$app->request->post())) {
 			if ($model->validate()) {
 				$model->save();
@@ -25,17 +31,25 @@ class SiteController extends Controller {
 	}
 
 	public function actionLogin() {
+	    if (!Yii::$app->user->isGuest) {
+            return $this->redirect(['app/index']);
+        }
 		$model = new LoginForm();
+		//Validation
 		if (Yii::$app->request->post('LoginForm')) {
             $model->attributes = Yii::$app->request->post('LoginForm');
-//            var_dump($model);
-//            die();
             if ($model->validate()) {
-                Yii::$app->user->login(User::getUser($model->username));
-//                var_dump("Валидация пройдена");
-//                die();
+                Yii::$app->user->login(User::findUser($model->username));
+                $this->goHome();
             }
         }
 		return $this->render('login', ['model' => $model]);
 	}
+
+	public function actionLogout() {
+	    if (!Yii::$app->user->isGuest) {
+            Yii::$app->user->logout();
+            return $this->goHome();
+        }
+    }
 }

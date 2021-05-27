@@ -22,22 +22,22 @@ class User extends ActiveRecord implements IdentityInterface {
 	/**
 	 * Get the user from DB by username as ActiveRecord object.
 	 * @param string $username
-	 * @return ActiveRecord which represents the user
+	 * @return ActiveRecord|null which represents the user
 	 */
-	public static function getUser($username) {
-        return self::find()->where(['username'=>$username])->limit(1)->one();
+	public static function findUser($username) {
+        return self::findOne(["username" => $username]);
     }
 
     /**
      * Get the user from DB by id as ActiveRecord object.
      * @param string|int $id the ID to be looked for
-     * @return ActiveRecord the identity object that matches the given ID.
+     * @return ActiveRecord|null the identity object that matches the given ID.
      * Null should be returned if such an identity cannot be found
      * or the identity is not in an active state (disabled, deleted, etc.)
      */
     public static function findIdentity($id)
     {
-        return self::find()->where(['id'=>$id])->limit(1)->one();
+        return self::findOne(['id'=>$id]);
     }
 
     /**

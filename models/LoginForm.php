@@ -23,7 +23,7 @@ class LoginForm extends Model {
 	 * @param string $attribute Field from model, which will show an error.
 	 */
 	public function validatePassword($attribute) {
-	    $user = User::getUser($this->username);
+	    $user = User::findUser($this->username);
 	    if (is_null($user) || !password_verify($this->password, $user->password)) {
 	        $this->addError($attribute, "Логин или пароль введены неверно.");
         }
