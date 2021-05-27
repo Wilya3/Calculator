@@ -4,6 +4,7 @@ namespace app\controllers;
 
 use app\models\LoginForm;
 use app\models\SignupForm;
+use app\models\User;
 use Yii;
 use yii\web\Controller;
 
@@ -30,6 +31,7 @@ class SiteController extends Controller {
 //            var_dump($model);
 //            die();
             if ($model->validate()) {
+                Yii::$app->user->login(User::getUser($model->username));
 //                var_dump("Валидация пройдена");
 //                die();
             }
