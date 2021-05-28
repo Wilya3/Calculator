@@ -7,7 +7,7 @@ namespace app\models;
 use yii\base\Model;
 
 /**
- * Class SignupForm belongs 'user' table
+ * Class SignupForm works with 'user' table
  * @package app\models
  */
 class SignupForm extends Model {

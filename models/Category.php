@@ -15,11 +15,11 @@ use \yii\db\ActiveRecord;
 class Category extends ActiveRecord {
 
     /**
-     * Get user's and default categories from DB
+     * Get user's and default categories from DB ("default" means foreign key is null)
      * @param string $user_id
      * @return array
      */
-    public function findCategories($user_id) {
-        return self::find()->where(['user_id', $user_id])->asArray()->all();
+    public static function findCategories($user_id) {
+        return self::find()->where(['user_id' => $user_id])->orWhere(['user_id' => null])->asArray()->all();
     }
 }

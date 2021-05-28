@@ -23,7 +23,7 @@ class LoginForm extends Model {
 	}
 
 	/**
-	 * Find user with username from DB. Compare password hash from model and password hash from DB.
+	 * Find user with username from DB. Compare password hash from model and from DB.
 	 * @param string $attribute Field from model, which will show an error.
 	 */
 	public function validatePassword($attribute) {
