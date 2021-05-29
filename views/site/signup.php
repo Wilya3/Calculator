@@ -13,6 +13,6 @@ use yii\helpers\HTML;
 	echo Html::submitButton('Зарегистрироваться', ['class'=>'btn btn-success']);
 	ActiveForm::end();
 	?>
-    <a href="/web/index.php?r=site%2Flogin">Вход</a>
+    <a href="login">Вход</a>
 </div>
 

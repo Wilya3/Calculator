@@ -14,5 +14,5 @@ use yii\helpers\Html;
 	echo Html::submitButton('Войти', ['class'=>'btn btn-success']);
 	ActiveForm::end();
 	?>
-    <a href="/web/index.php?r=site%2Fsignup">Регистрация</a>
+    <a href="signup">Регистрация</a>
 </div>

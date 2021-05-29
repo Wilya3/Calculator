@@ -20,6 +20,6 @@ class Category extends ActiveRecord {
      * @return array
      */
     public static function findCategories($user_id) {
-        return self::find()->where(['user_id' => $user_id])->orWhere(['user_id' => null])->asArray()->all();
+        return [1, 2, 3]; // TODO: Fix query
     }
 }

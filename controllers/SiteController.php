@@ -28,7 +28,8 @@ class SiteController extends Controller {
 		if ($model->load(Yii::$app->request->post())) {
 			if ($model->validate()) {
 				$model->save();
-			}
+                return $this->redirect(['app/index']);
+            }
 		}
 		return $this->render('signup', ['model' => $model]);
 	}
@@ -43,7 +44,7 @@ class SiteController extends Controller {
             $model->attributes = Yii::$app->request->post('LoginForm');
             if ($model->validate()) {
                 Yii::$app->user->login(User::findUser($model->username));
-                $this->goHome();
+                return $this->redirect(['app/index']);
             }
         }
 		return $this->render('login', ['model' => $model]);
