@@ -28,6 +28,7 @@ class SiteController extends Controller {
 		if ($model->load(Yii::$app->request->post())) {
 			if ($model->validate()) {
 				$model->save();
+                Yii::$app->user->login(User::findUser($model->username));
                 return $this->redirect(['app/index']);
             }
 		}

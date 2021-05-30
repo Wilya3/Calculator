@@ -3,6 +3,7 @@
 
 namespace app\models;
 
+use yii\base\InvalidConfigException;
 use yii\db\ActiveRecord;
 use yii\web\IdentityInterface;
 
@@ -15,11 +16,28 @@ use yii\web\IdentityInterface;
  */
 class User extends ActiveRecord implements IdentityInterface {
 
-	public static function tableName() {
-		return 'user';
-	}
+    public function getCategories() {
+	    return $this->hasMany(Category::class, ['id' => 'category_id'])
+            ->viaTable('user_category', ['user_id' => 'id']);
+    }
 
-	/**
+    /**
+     * Add relation with default categories via junction table
+     * @param bool $insert
+     * @param array $changedAttributes
+     */
+    public function afterSave($insert, $changedAttributes) {
+        parent::afterSave($insert, $changedAttributes);
+        // If user is new, then add relations with default categories
+        if ($insert) {
+            $defaultCategories = Category::findDefaultCategories();
+            foreach ($defaultCategories as $category) {
+                $this->link('categories', $category);
+            }
+        }
+    }
+
+    /**
 	 * Get the user from DB by username as ActiveRecord object.
 	 * @param string $username
 	 * @return ActiveRecord|null which represents the user

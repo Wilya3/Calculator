@@ -11,7 +11,18 @@ use yii\web\Controller;
 class AppController extends Controller {
 
     public function actionIndex() {
-        $table = Category::findCategories(Yii::$app->user->getId());
+        if (Yii::$app->user->isGuest)
+            $this->redirect(['site/index']);
+        $user = Yii::$app->user->identity;
+        $table = $user->categories;
         return $this->render('index', ['table' => $table]);
     }
+
+//    public function actionCategoryUpdate() {
+//
+//    }
+//
+//    public function actionCategoryDelete() {
+//        Yii
+//    }
 }
