@@ -3,7 +3,6 @@
 
 namespace app\models;
 
-use yii\base\InvalidConfigException;
 use yii\db\ActiveRecord;
 
 /**
@@ -25,11 +24,10 @@ class Category extends ActiveRecord {
     }
 
     /**
-     * Get user's and default categories from DB
-     * @param string $user_id
-     * @return array
+     * @param int $id
+     * @return null|ActiveRecord
      */
-    public static function findCategoriesForUser($user_id) {
-        return [1, 2, 3]; // TODO: Fix query
+    public static function findCategory($id) {
+         return self::findOne(['id' => $id]);
     }
 }
