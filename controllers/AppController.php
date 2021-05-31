@@ -24,7 +24,7 @@ class AppController extends Controller {
             ],
         ];
     }  // If any error occurred, redirect to site/index. If logged, redirect to app/index
-
+    //HHEhEY i did its
     public function actionIndex() {
         $user = Yii::$app->user->identity;
         $table = $user->categories;
