@@ -18,11 +18,13 @@
 <!--    }-->
 <!--</style>-->
 
+
 <table class="table">
-    <h2>Категории</h2>
+    <h3>Категории</h3>
     <tr>
         <th>Название</th>
         <th>Описание</th>
+        <th></th>
     </tr>
     <?php foreach($table as $row): ?>
     <tr>

@@ -6,13 +6,37 @@ use app\models\LoginForm;
 use app\models\SignupForm;
 use app\models\User;
 use Yii;
+use yii\filters\AccessControl;
 use yii\web\Controller;
 
 class SiteController extends Controller {
 
+    public function behaviors() {
+        return [
+            'access' => [
+                'class' => AccessControl::class,
+                'only' => ['login', 'logout', 'signup'],
+                'rules' => [
+                    [
+                        'allow' => true,
+                        'actions' => ['login', 'signup'],
+                        'roles' => ['?'],
+                    ],
+                    [
+                        'allow' => true,
+                        'actions' => ['logout'],
+                        'roles' => ['@'],
+                    ],
+                ],
+            ],
+        ];
+    }  // If any error occurred, redirect to site/index. If logged, redirect to app/index
+
+    public function actionError() {
+        return $this->redirect(['site/index']);
+    }
+
 	public function actionIndex() {
-//	    var_dump(Yii::$app->user->identity);
-//	    die();
         if (!Yii::$app->user->isGuest){
             return $this->redirect(['app/index']);
         }
@@ -20,15 +44,12 @@ class SiteController extends Controller {
 	}
 
 	public function actionSignup() {
-        if (!Yii::$app->user->isGuest) {
-            return $this->redirect(['app/index']);
-        }
+        // Registration
 		$model = new SignupForm();
-        //Registration
 		if ($model->load(Yii::$app->request->post())) {
 			if ($model->validate()) {
 				$model->save();
-                Yii::$app->user->login(User::findUser($model->username));
+                Yii::$app->user->login(User::findUser($model->username), 3600*24*30);
                 return $this->redirect(['app/index']);
             }
 		}
@@ -36,15 +57,12 @@ class SiteController extends Controller {
 	}
 
 	public function actionLogin() {
-	    if (!Yii::$app->user->isGuest) {
-            return $this->redirect(['app/index']);
-        }
+        // Validation
 		$model = new LoginForm();
-		//Validation
 		if (Yii::$app->request->post('LoginForm')) {
             $model->attributes = Yii::$app->request->post('LoginForm');
             if ($model->validate()) {
-                Yii::$app->user->login(User::findUser($model->username));
+                Yii::$app->user->login(User::findUser($model->username), 3600*24*30);
                 return $this->redirect(['app/index']);
             }
         }
@@ -52,9 +70,7 @@ class SiteController extends Controller {
 	}
 
 	public function actionLogout() {
-	    if (!Yii::$app->user->isGuest) {
-            Yii::$app->user->logout();
-            return $this->goHome();
-        }
+        Yii::$app->user->logout();
+        return $this->goHome();
     }
 }

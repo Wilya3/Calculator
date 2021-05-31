@@ -10,7 +10,7 @@ use yii\db\ActiveRecord;
  * id INT UNSIGNED PK
  * name VARCHAR(255)
  * description TEXT NULL
- * is_default BOOL
+ * is_default BOOL (0, 1)
  */
 class Category extends ActiveRecord {
 
