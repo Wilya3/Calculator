@@ -7,10 +7,9 @@ use yii\helpers\Html;
 
 <div>
 	<?php
-	$form = ActiveForm::begin(['options' => ['class'=>'form form-horizontal', 'id'=>'loginForm']]);
+	$form = ActiveForm::begin(['options' => ['class'=>'form form-horizontal', 'id'=>'LoginForm']]);
 	echo $form->field($model, 'username')->label("Логин");
 	echo $form->field($model, 'password')->passwordInput()->label("Пароль");
-//    echo $form->errorSummary($model);
 	echo Html::submitButton('Войти', ['class'=>'btn btn-success']);
 	ActiveForm::end();
 	?>

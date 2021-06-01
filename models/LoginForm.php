@@ -31,7 +31,5 @@ class LoginForm extends Model {
 	    if (is_null($user) || !password_verify($this->password, $user->password)) {
 	        $this->addError($attribute, "Логин или пароль введены неверно.");
         }
-//	    print_r($user);
-//	    die();
     }
 }
