@@ -14,11 +14,6 @@ use yii\widgets\ActiveForm; ?>
     }
 ?>
 
-<!--<style>-->
-<!--    td {-->
-<!--        border: 2px solid gray;-->
-<!--    }-->
-<!--</style>-->
 
 <?php if (count($table) > 0): ?>
     <table class="table">
@@ -30,7 +25,6 @@ use yii\widgets\ActiveForm; ?>
         </tr>
         <?php foreach($table as $row): ?>
         <tr>
-    <!--        <td> --><?//= $row->id ?><!--</td>-->
             <td> <?= $row->name ?> </td>
             <td> <?= $row->description ?> </td>
             <td> <a href="category-delete?id=<?= $row->id ?>">Удалить</a> </td>

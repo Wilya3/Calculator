@@ -3,7 +3,6 @@
 
 namespace app\models;
 
-use yii\base\InvalidConfigException;
 use yii\db\ActiveRecord;
 use yii\web\IdentityInterface;
 

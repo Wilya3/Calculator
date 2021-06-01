@@ -22,7 +22,8 @@ class SignupForm extends Model {
 			[['username', 'email'], 'unique', 'targetClass' => 'app\models\User'],
 			['email', 'email'],
             [['username'], 'string', 'max' => 30],
-            [['email'], 'string', 'max' => 255]
+            [['email'], 'string', 'max' => 255],
+            [['username','email'],'filter','filter'=>'\yii\helpers\HtmlPurifier::process'] //css, xss
 		];
 	}
 

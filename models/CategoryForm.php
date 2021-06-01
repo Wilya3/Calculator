@@ -17,7 +17,7 @@ class CategoryForm extends Model {
             ['name', 'required'],
             ['name', 'uniqueName'],
             [['name'], 'string', 'max' => 255],
-            ['description', 'default'] // default null. Warning! Without any rule attribute doesnt save!
+            [['name','description'],'filter','filter'=>'\yii\helpers\HtmlPurifier::process'] //css, xss
         ];
     }
 
