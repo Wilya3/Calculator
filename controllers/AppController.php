@@ -4,7 +4,9 @@
 namespace app\controllers;
 
 use app\models\Category;
+use app\models\CategoryForm;
 use Yii;
+use yii\base\UserException;
 use yii\filters\AccessControl;
 use yii\web\Controller;
 
@@ -24,11 +26,25 @@ class AppController extends Controller {
             ],
         ];
     }  // If any error occurred, redirect to site/index. If logged, redirect to app/index
-    //HHEhEY i did its
+
     public function actionIndex() {
+        // Category add processing
+        $model = new CategoryForm();
+        if (Yii::$app->request->post('CategoryForm')) {
+            $model->attributes = Yii::$app->request->post('CategoryForm');
+            try {
+                if ($model->validate()) {
+                    $model->save();
+                }
+            } catch (UserException $e) {
+                Yii::$app->session->setFlash('error', 'Категория с таким именем уже существует!');
+            }
+        }
+        // Get categories
         $user = Yii::$app->user->identity;
+        unset($user->categories); // without this added category will not be shown
         $table = $user->categories;
-        return $this->render('index', ['table' => $table]);
+        return $this->render('index', ['table' => $table, 'model' => $model]);
     }
 
     public function actionCategoryUpdate() {
