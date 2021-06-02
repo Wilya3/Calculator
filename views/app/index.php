@@ -22,11 +22,18 @@ use yii\widgets\ActiveForm; ?>
             <th>Название</th>
             <th>Описание</th>
             <th></th>
+            <th></th>
         </tr>
         <?php foreach($table as $row): ?>
         <tr>
             <td> <?= $row->name ?> </td>
             <td> <?= $row->description ?> </td>
+            <td>
+                <?php if ($row->is_default === 0): ?>
+                <a href="category-update?id=<?= $row->id ?>">Изменить</a>
+                <?php endif; ?>
+            </td>
+
             <td> <a href="category-delete?id=<?= $row->id ?>">Удалить</a> </td>
         </tr>
         <?php endforeach; ?>
