@@ -30,7 +30,7 @@ class SiteController extends Controller {
                 ],
             ],
         ];
-    }  // If any error occurred, redirect to site/index. If logged, redirect to app/index
+    }  // If any error occurred, redirect to site/index. If logged, redirect to category/index
 
     public function actionError() {
         return $this->redirect(['site/index']);
@@ -38,7 +38,7 @@ class SiteController extends Controller {
 
 	public function actionIndex() {
         if (!Yii::$app->user->isGuest){
-            return $this->redirect(['app/index']);
+            return $this->redirect(['category/index']);
         }
 		return $this->render('index');
 	}
@@ -50,7 +50,7 @@ class SiteController extends Controller {
 			if ($model->validate()) {
 				$model->save();
                 Yii::$app->user->login(User::findUser($model->username), 3600*24*30);
-                return $this->redirect(['app/index']);
+                return $this->redirect(['category/index']);
             }
 		}
 		return $this->render('signup', ['model' => $model]);
@@ -63,7 +63,7 @@ class SiteController extends Controller {
             $model->attributes = Yii::$app->request->post('LoginForm');
             if ($model->validate()) {
                 Yii::$app->user->login(User::findUser($model->username), 3600*24*30);
-                return $this->redirect(['app/index']);
+                return $this->redirect(['category/index']);
             }
         }
 		return $this->render('login', ['model' => $model]);

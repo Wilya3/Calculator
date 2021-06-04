@@ -43,12 +43,5 @@ use yii\widgets\ActiveForm; ?>
 <?php endif; ?>
 
 <div>
-    <h3>Добавить категорию</h3>
-    <?php
-    $form = ActiveForm::begin(['options' => ['class'=>'form form-horizontal', 'id'=>'CategoryForm']]);
-    echo $form->field($model, 'name')->label("Название");
-    echo $form->field($model, 'description')->textarea()->label("Описание");
-    echo Html::submitButton('Добавить', ['class'=>'btn btn-success']);
-    ActiveForm::end();
-    ?>
+    <a href="category-add" class="btn btn-success">Добавить категорию</a>
 </div>

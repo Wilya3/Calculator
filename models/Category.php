@@ -22,7 +22,7 @@ class Category extends ActiveRecord {
             ->viaTable('user_category', ['category_id' => 'id']);
     }
 
-    public static function getOldName(int $id) {
+    public static function getName(int $id) {
         return self::findOne(['id' => $id])->name;
     }
 
@@ -40,7 +40,7 @@ class Category extends ActiveRecord {
      * @param int $category_id
      * @return null|ActiveRecord
      */
-    public static function findUsersCategory(int $category_id) {
+    public static function findCurrentUserCategory(int $category_id) {
         $user = Yii::$app->user->identity;
         $categories = $user->categories;
         foreach ($categories as $category) {
