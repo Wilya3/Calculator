@@ -20,6 +20,11 @@ class User extends ActiveRecord implements IdentityInterface {
             ->viaTable('user_category', ['user_id' => 'id']);
     }
 
+    public function getCharges() {
+        return $this->hasMany(Charge::class, ['user_category_id' => 'id'])
+            ->viaTable('user_category', ['user_id' => 'id']);
+    }
+
     /**
      * Add relation with default categories via junction table
      * @param bool $insert
