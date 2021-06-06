@@ -66,7 +66,6 @@ class CategoryController extends Controller {
             return $this->goHome();
         }
         $model = new CategoryForm();
-        $model->setAttributes($category->attributes);
         if ($model->load(Yii::$app->request->post(), 'CategoryForm')) {
             $model->id = $id;
             if ($model->validate()) {
@@ -74,6 +73,7 @@ class CategoryController extends Controller {
                 return $this->goHome();
             }
         }
+        $model->setAttributes($category->attributes);
         return $this->render('category_update', ['model' => $model]);
     }
 

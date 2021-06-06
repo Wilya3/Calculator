@@ -60,7 +60,6 @@ class CategoryForm extends Model {
         $category->description = $this->description;
         $category->is_default = 0;
         $category->save();
-        $category->link('users', Yii::$app->user->identity);
     }
 
     public function isNameChanged(): bool { // TODO: Такую бизнес-логику надо выносить куда-то

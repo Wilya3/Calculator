@@ -10,9 +10,11 @@ use yii\db\ActiveRecord;
 /**
  * Table 'charge' from DB 'calculator'
  * id INT UNSIGNED PK
- * username VARCHAR(30) UK
- * password VARCHAR(255)
- * email VARCHAR(255) UK
+ * name VARCHAR(255)
+ * description TEXT
+ * amount DECIMAL(13, 3)
+ * date DATE
+ * user_category_id INT UNSIGNED
  */
 class Charge extends ActiveRecord {
 

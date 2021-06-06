@@ -18,7 +18,7 @@ class m210605_122744_create_charge_table extends Migration
             'description' => $this->text()->null(),
             'amount' => $this->decimal(13, 3)->notNull(),
             'date' => $this->date()->notNull(),
-            'user_category_id' => $this->integer()->unsigned()
+            'user_category_id' => $this->integer()->unsigned()->notNull()
         ]);
     }
 

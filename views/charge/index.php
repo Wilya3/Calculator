@@ -44,5 +44,5 @@ use yii\widgets\ActiveForm; ?>
 <?php endif; ?>
 
 <div>
-    <a href="category-add" class="btn btn-success">Добавить запись</a>
+    <a href="charge-add" class="btn btn-success">Добавить запись</a>
 </div>
