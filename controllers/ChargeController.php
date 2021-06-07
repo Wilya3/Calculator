@@ -4,8 +4,8 @@
 namespace app\controllers;
 
 
+use app\models\Charge;
 use app\models\ChargeForm;
-use app\models\Test;
 use Yii;
 use yii\filters\AccessControl;
 use yii\web\Controller;
@@ -45,5 +45,48 @@ class ChargeController extends Controller {
         $user = Yii::$app->user->identity;
         $categories = $user->categories;
         return $this->render('charge_add', ['model' => $model, 'categories' => $categories]);
+    }
+
+    public function actionChargeUpdate(int $id) {
+        $model = new ChargeForm();
+        $charge = Charge::findOne(['id' => $id]);
+        if (is_null($charge) || !$charge->belongsThisUser()) {
+            Yii::$app->session->setFlash('error', 'Ошибка! Данной категории не существует!');
+            return $this->redirect(['charge/index']);
+        }
+
+        if ($model->load(Yii::$app->request->post(), 'ChargeForm')) {
+            $model->id = $id;
+            if ($model->validate()) {
+                $model->save();
+                return $this->redirect(['charge/index']);
+            }
+        }
+
+        $model->setAttributes($charge->attributes);
+
+        $user = Yii::$app->user->identity;  // categories for dropList
+        $categories = $user->categories;
+
+        $category = $charge->category; // set category
+        $model->category_id = $category->id;
+        return $this->render('charge_update', ['model' => $model, 'categories' => $categories]);
+    }
+
+    public function actionChargeDelete(int $id) {
+        try {
+            $charge = Charge::findOne(['id' => $id]);
+            if ($charge->belongsThisUser()) {
+                $charge->delete();
+            } else {
+                Yii::$app->session->setFlash('error', 'Ошибка! Данной категории не существует!');
+            }
+        } catch (\Throwable $e) {
+            Yii::$app->session->setFlash('error', 'Неизвестная ошибка!');
+            // Логгирование
+        }
+        finally {
+            return $this->redirect(['charge/index']);
+        }
     }
 }

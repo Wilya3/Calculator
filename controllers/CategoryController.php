@@ -58,9 +58,9 @@ class CategoryController extends Controller {
      * @param int $id category id to update
      * @return string|Response redirect home
      */
-    public function actionCategoryUpdate(int $id) {
-        $category = Category::findCurrentUserCategory($id);
-        if (is_null($category) || $category->is_default === 1) {
+    public function actionCategoryUpdate(int $id) {  // TODO: Refactor
+        $category = Category::findOne(['id' => $id]);
+        if (is_null($category) || !$category->belongsThisUser() || $category->is_default == 1) {
             Yii::$app->session->setFlash('error',
                 'Ошибка! Данной категории не существует или ее нельзя изменять');
             return $this->goHome();
@@ -86,14 +86,15 @@ class CategoryController extends Controller {
      */
     public function actionCategoryDelete(int $id): Response {
         try {
-            $category = Category::findCurrentUserCategory($id);
-            $user = Yii::$app->user->identity;
+            $category = Category::findOne(['id' => $id]);
+            if (!is_null($category) && $category->belongsThisUser()) {
 
-            // delete relation in junction table ("delete: true" means deleting row in junction table)
-            $category->unlink('users', $user, true);
+                // delete relation from junction table. Need for default categories
+                $category->unlink('users', Yii::$app->user->identity, true);
 
-            if ($category->is_default == 0) { // if category was created by user, delete it from table Category
-                $category->delete();
+                if ($category->is_default == 0) { // if category was created by user, delete it from table Category
+                    $category->delete();
+                }
             }
         } catch (Throwable $e) {
             Yii::$app->session->setFlash('error', 'Ошибка! Данной категории не существует.');

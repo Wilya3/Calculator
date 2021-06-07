@@ -7,7 +7,6 @@
 <?php
     if (Yii::$app->session->hasFlash('error')) {
         $flash = Yii::$app->session->getFlash('error');
-        echo '<div class="flash-error">' . $flash . "</div>";
     }
 ?>
 

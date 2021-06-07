@@ -43,15 +43,9 @@ class Category extends ActiveRecord {
         }
     }
 
-    /**
-     * Delete all charges, which belongs to this category
-     */
-    public function afterDelete() {
-        parent::afterDelete();
-        $charges = $this->charges;  // TODO: Не будет работать, потому что в junction связь уже удалена
-        foreach ($charges as $charge) {
-            $charge->delete();
-        }
+    public function belongsThisUser(): bool {
+        $user_category = UserCategory::findOne(['category_id' => $this->id]);
+        return ($user_category->user_id == Yii::$app->user->getId());
     }
 
     /**
@@ -60,22 +54,5 @@ class Category extends ActiveRecord {
      */
     public static function findDefaultCategories() {
         return self::find()->where(['is_default' => 1])->all();
-    }
-
-    /**
-     * Get a category by id which HAS a connection with current user.
-     * If there is not category with specified id or category has not the connection with current user, return null
-     * @param int $category_id
-     * @return null|ActiveRecord
-     */
-    public static function findCurrentUserCategory(int $category_id) {
-        $user = Yii::$app->user->identity;
-        $categories = $user->categories;
-        foreach ($categories as $category) {
-            if ($category->id === $category_id) {
-                return $category;
-            }
-        }
-        return null;
     }
 }

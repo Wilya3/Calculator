@@ -12,7 +12,6 @@ use yii\widgets\ActiveForm; ?>
 <?php
     if (Yii::$app->session->hasFlash('error')) {
         $flash = Yii::$app->session->getFlash('error');
-        echo '<div class="flash-error">' . $flash . "</div>";
     }
 ?>
 
@@ -25,6 +24,7 @@ use yii\widgets\ActiveForm; ?>
             <th>Описание</th>
             <th>Сумма</th>
             <th>Дата</th>
+            <th>Категория</th>
             <th></th>
             <th></th>
         </tr>
@@ -34,6 +34,7 @@ use yii\widgets\ActiveForm; ?>
             <td> <?= $row->description ?> </td>
             <td> <?= $row->amount ?> </td>
             <td> <?= $row->date ?> </td>
+            <td> <?= $row->category->name ?> </td>
             <td> <a href="charge-update?id=<?= $row->id ?>">Изменить</a> </td>
             <td> <a href="charge-delete?id=<?= $row->id ?>">Удалить</a> </td>
         </tr>

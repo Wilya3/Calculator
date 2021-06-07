@@ -8,15 +8,16 @@ use Yii;
 use yii\base\Model;
 
 class ChargeForm extends Model {
+    public $id; //need for update
     public $name;
     public $description;
     public $amount;
     public $date;
     public $category_id;
 
-    public function rules() {
+    public function rules() {  // TODO: разобраться с датой
         return [
-            [['name', 'amount'], 'required'],
+            [['name', 'amount', 'category_id'], 'required'],
             [['name', 'description'], 'filter', 'filter' => '\yii\helpers\HtmlPurifier::process'],
             ['amount', 'number'],
             ['date', 'date', 'format' => 'php:Y-m-d'],
@@ -26,11 +27,18 @@ class ChargeForm extends Model {
     }
 
     public function isCategoryBelongsThisUser(): bool {
-        return !is_null(Category::findCurrentUserCategory($this->category_id));
+        $category = Category::findOne(['id' => $this->category_id]);
+        if (is_null($category)) {
+            return false;
+        }
+        return $category->belongsThisUser();
     }
 
     public function save() {
-        $charge = new Charge();
+        $charge = Charge::findOne(['id' => $this->id]);
+        if (is_null($charge)) {
+            $charge = new Charge();
+        }
         $charge->name = $this->name;
         $charge->description = $this->description;
         $charge->amount = $this->amount;

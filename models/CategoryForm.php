@@ -29,8 +29,7 @@ class CategoryForm extends Model {
                 }],
             [['name'], 'string', 'max' => 255],
             [['name','description'],'filter','filter'=>'\yii\helpers\HtmlPurifier::process'], //css, xss
-            ['id', 'safe'],  // https://www.yiiframework.com/doc/guide/2.0/en/structure-models#safe-attributes
-            ['is_default', 'safe']
+            ['id', 'safe']  // https://www.yiiframework.com/doc/guide/2.0/en/structure-models#safe-attributes
         ];
     }
 
