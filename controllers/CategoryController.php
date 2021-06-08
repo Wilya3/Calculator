@@ -31,8 +31,8 @@ class CategoryController extends Controller {
     public function actionIndex() {
         // Get categories
         $user = Yii::$app->user->identity;
-        $table = $user->categories;  // (ActiveRecord) User->getCategories()->hasMany()
-        return $this->render('index', ['table' => $table]);
+        $categories = $user->categories;  // (ActiveRecord) User->getCategories()->hasMany()
+        return $this->render('index', ['categories' => $categories]);
     }
 
     /**

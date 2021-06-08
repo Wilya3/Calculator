@@ -4,11 +4,6 @@ use yii\helpers\Html;
 use yii\widgets\ActiveForm; ?>
 
 
-<h1>
-    Добро пожаловать,
-    <?= Yii::$app->user->identity->username; ?>!
-</h1>
-
 <?php
     if (Yii::$app->session->hasFlash('error')) {
         $flash = Yii::$app->session->getFlash('error');
@@ -16,7 +11,7 @@ use yii\widgets\ActiveForm; ?>
 ?>
 
 
-<?php if (count($table) > 0): ?>
+<?php if (count($charges) > 0): ?>
     <table class="table">
         <h3>Расходы/доходы</h3>
         <tr>
@@ -28,15 +23,15 @@ use yii\widgets\ActiveForm; ?>
             <th></th>
             <th></th>
         </tr>
-        <?php foreach($table as $row): ?>
+        <?php foreach($charges as $row): ?>
         <tr>
             <td> <?= $row->name ?> </td>
             <td> <?= $row->description ?> </td>
             <td> <?= $row->amount ?> </td>
             <td> <?= $row->date ?> </td>
             <td> <?= $row->category->name ?> </td>
-            <td> <a href="charge-update?id=<?= $row->id ?>">Изменить</a> </td>
-            <td> <a href="charge-delete?id=<?= $row->id ?>">Удалить</a> </td>
+            <td> <a href="/charge/charge-update?id=<?= $row->id ?>">Изменить</a> </td>
+            <td> <a href="/charge/charge-delete?id=<?= $row->id ?>">Удалить</a> </td>
         </tr>
         <?php endforeach; ?>
     </table>
@@ -45,5 +40,5 @@ use yii\widgets\ActiveForm; ?>
 <?php endif; ?>
 
 <div>
-    <a href="charge-add" class="btn btn-success">Добавить запись</a>
+    <a href="/charge/charge-add" class="btn btn-success">Добавить запись</a>
 </div>

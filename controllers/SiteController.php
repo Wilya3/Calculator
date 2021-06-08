@@ -38,7 +38,7 @@ class SiteController extends Controller {
 
 	public function actionIndex() {
         if (!Yii::$app->user->isGuest){
-            return $this->redirect(['category/index']);
+            return $this->redirect(['graph/index']);
         }
 		return $this->render('index');
 	}
@@ -50,7 +50,7 @@ class SiteController extends Controller {
 			if ($model->validate()) {
 				$model->save();
                 Yii::$app->user->login(User::findUser($model->username), 3600*24*30);
-                return $this->redirect(['category/index']);
+                return $this->redirect(['graph/index']);
             }
 		}
 		return $this->render('signup', ['model' => $model]);
@@ -63,7 +63,7 @@ class SiteController extends Controller {
             $model->attributes = Yii::$app->request->post('LoginForm');
             if ($model->validate()) {
                 Yii::$app->user->login(User::findUser($model->username), 3600*24*30);
-                return $this->redirect(['category/index']);
+                return $this->redirect(['graph/index']);
             }
         }
 		return $this->render('login', ['model' => $model]);

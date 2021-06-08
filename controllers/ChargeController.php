@@ -30,8 +30,8 @@ class ChargeController extends Controller {
     // TODO: спросить насчет запросов yii2: ...WHERE...IN (...), когда значений будет много
     public function actionIndex() {
         $user = Yii::$app->user->identity;
-        $table = $user->charges;
-        return $this->render('index', ['table' => $table]);
+        $charges = $user->charges;
+        return $this->render('index', ['charges' => $charges]);
     }
 
     public function actionChargeAdd() {
@@ -39,7 +39,7 @@ class ChargeController extends Controller {
         if ($model->load(Yii::$app->request->post(), 'ChargeForm')) {
             if ($model->validate()) {
                 $model->save();
-                $this->redirect(['charge/index']);
+                $this->goHome();
             }
         }
         $user = Yii::$app->user->identity;
@@ -49,26 +49,25 @@ class ChargeController extends Controller {
 
     public function actionChargeUpdate(int $id) {
         $model = new ChargeForm();
+        // charge validate
         $charge = Charge::findOne(['id' => $id]);
         if (is_null($charge) || !$charge->belongsThisUser()) {
             Yii::$app->session->setFlash('error', 'Ошибка! Данной категории не существует!');
-            return $this->redirect(['charge/index']);
+            return $this->goHome();
         }
-
+        // charge update
         if ($model->load(Yii::$app->request->post(), 'ChargeForm')) {
             $model->id = $id;
             if ($model->validate()) {
                 $model->save();
-                return $this->redirect(['charge/index']);
+                return $this->goHome();
             }
         }
-
+        // collect data for view
         $model->setAttributes($charge->attributes);
-
         $user = Yii::$app->user->identity;  // categories for dropList
         $categories = $user->categories;
-
-        $category = $charge->category; // set category
+        $category = $charge->category;  // set current category for dropList
         $model->category_id = $category->id;
         return $this->render('charge_update', ['model' => $model, 'categories' => $categories]);
     }
@@ -86,7 +85,7 @@ class ChargeController extends Controller {
             // Логгирование
         }
         finally {
-            return $this->redirect(['charge/index']);
+            return $this->goHome();
         }
     }
 }
