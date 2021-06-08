@@ -30,7 +30,7 @@ class SiteController extends Controller {
                 ],
             ],
         ];
-    }  // If any error occurred, redirect to site/index. If logged, redirect to category/index
+    }  // If any error occurred, redirect to site/index. If logged, redirect to graph/index
 
     public function actionError() {
         return $this->redirect(['site/index']);

@@ -26,12 +26,12 @@ class CategoryController extends Controller {
                 ],
             ],
         ];  // TODO: APEX js      service entity repository
-    }  // If any error occurred, redirect to site/index. If logged, redirect to category/index
+    }  // If any error occurred, redirect to site/index. If logged, redirect to graph/index
 
     public function actionIndex() {
         // Get categories
         $user = Yii::$app->user->identity;
-        $categories = $user->categories;  // (ActiveRecord) User->getCategories()->hasMany()
+        $categories = $user->categoriesAsArray;  // (ActiveRecord) User->getCategories()->hasMany()
         return $this->render('index', ['categories' => $categories]);
     }
 

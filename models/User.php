@@ -22,12 +22,17 @@ class User extends ActiveRecord implements IdentityInterface {
 
     public function getCategoriesAsArray() {
         return $this->hasMany(Category::class, ['id' => 'category_id'])
-            ->viaTable('user_category', ['user_id' => 'id'])->asArray()->all();
+            ->viaTable('user_category', ['user_id' => 'id'])->asArray();
     }
 
     public function getCharges() {
         return $this->hasMany(Charge::class, ['user_category_id' => 'id'])
-            ->viaTable('user_category', ['user_id' => 'id']);
+            ->viaTable('user_category', ['user_id' => 'id'])->with('category');
+    }
+
+    public function getChargesAsArray() {
+        return $this->hasMany(Charge::class, ['user_category_id' => 'id'])
+            ->viaTable('user_category', ['user_id' => 'id'])->with('category')->asArray();
     }
 
     /**

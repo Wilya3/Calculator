@@ -25,13 +25,13 @@ use yii\widgets\ActiveForm; ?>
         </tr>
         <?php foreach($charges as $row): ?>
         <tr>
-            <td> <?= $row->name ?> </td>
-            <td> <?= $row->description ?> </td>
-            <td> <?= $row->amount ?> </td>
-            <td> <?= $row->date ?> </td>
-            <td> <?= $row->category->name ?> </td>
-            <td> <a href="/charge/charge-update?id=<?= $row->id ?>">Изменить</a> </td>
-            <td> <a href="/charge/charge-delete?id=<?= $row->id ?>">Удалить</a> </td>
+            <td> <?= $row['name'] ?> </td>
+            <td> <?= $row['description'] ?> </td>
+            <td> <?= $row['amount'] ?> </td>
+            <td> <?= $row['date'] ?> </td>
+            <td> <?= $row['category']['name'] ?> </td>
+            <td> <a href="/charge/charge-update?id=<?= $row['id'] ?>">Изменить</a> </td>
+            <td> <a href="/charge/charge-delete?id=<?= $row['id'] ?>">Удалить</a> </td>
         </tr>
         <?php endforeach; ?>
     </table>

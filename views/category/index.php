@@ -17,15 +17,15 @@
         </tr>
         <?php foreach($categories as $row): ?>
         <tr>
-            <td> <?= $row->name ?> </td>
-            <td> <?= $row->description ?> </td>
+            <td> <?= $row['name']?> </td>
+            <td> <?= $row['description'] ?> </td>
             <td>
-                <?php if ($row->is_default === 0): ?>
-                <a href="/category/category-update?id=<?= $row->id ?>">Изменить</a>
+                <?php if ($row['is_default'] === 0): ?>
+                <a href="/category/category-update?id=<?= $row['id'] ?>">Изменить</a>
                 <?php endif; ?>
             </td>
 
-            <td> <a href="/category/category-delete?id=<?= $row->id ?>">Удалить</a> </td>
+            <td> <a href="/category/category-delete?id=<?= $row['id'] ?>">Удалить</a> </td>
         </tr>
         <?php endforeach; ?>
     </table>

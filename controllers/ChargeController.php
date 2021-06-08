@@ -24,13 +24,13 @@ class ChargeController extends Controller {
                 ],
             ],
         ];
-    }  // If any error occurred, redirect to site/index. If logged, redirect to category/index
+    }  // If any error occurred, redirect to site/index. If logged, redirect to graph/index
 
 
     // TODO: спросить насчет запросов yii2: ...WHERE...IN (...), когда значений будет много
     public function actionIndex() {
         $user = Yii::$app->user->identity;
-        $charges = $user->charges;
+        $charges = $user->chargesAsArray;
         return $this->render('index', ['charges' => $charges]);
     }
 
