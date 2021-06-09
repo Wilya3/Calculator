@@ -17,7 +17,7 @@ class ChargeForm extends Model {
 
     public function rules() {  // TODO: разобраться с датой
         return [
-            [['name', 'amount', 'category_id'], 'required'],  // TODO: Разобраться с инъекциями
+            [['name', 'amount', 'category_id'], 'required'],
             [['name', 'description'], 'filter', 'filter' => '\yii\helpers\HtmlPurifier::process'],
             ['amount', 'number'],
             ['date', 'date', 'format' => 'php:Y-m-d'],

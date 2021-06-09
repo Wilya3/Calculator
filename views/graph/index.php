@@ -1,16 +1,12 @@
-<script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
-
 <?php
-
 if (Yii::$app->session->hasFlash('error')) {
     $flash = Yii::$app->session->getFlash('error');
-}
-?>
+} ?>
+<script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
+
 
 <h3>Графики</h3>
-
 <div id="chart"></div>
-
 
 
 <?php
@@ -21,24 +17,9 @@ include_once __DIR__ . '/../category/index.php';
 
 
 <script>
-    var options = {
-        title: {
-          text: "Расходы"
-        },
-        chart: {
-            type: 'line',
-            height: 400
-        },
-        series: [{
-            name: 'Дата',
-            data: <?= json_encode($data['date_sum']['sum']) ?> //[10000,120.32]
-        }],
-        xaxis: {
-            categories:  <?= json_encode($data['date_sum']['date']) ?> //["2021-06-06","2021-06-08"]
-        }
-    }
-
-    var chart = new ApexCharts(document.querySelector("#chart"), options);
-
-    chart.render();
+    // All these constants are required to create charts. They are used in closures. Forbidden to rename!
+    // Each constant represents corresponding table.
+    const categories = <?= json_encode($categories) ?>;
+    const charges = <?= json_encode($charges) ?>;
+    const user_category = <?= json_encode($user_category) ?>;
 </script>

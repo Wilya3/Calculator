@@ -4,8 +4,10 @@
 namespace app\controllers;
 
 
+use app\models\Category;
 use app\models\Charge;
 use app\models\ChargeForm;
+use app\models\UserCategory;
 use Yii;
 use yii\filters\AccessControl;
 use yii\web\Controller;
@@ -27,11 +29,28 @@ class ChargeController extends Controller {
     }  // If any error occurred, redirect to site/index. If logged, redirect to graph/index
 
 
-    // TODO: спросить насчет запросов yii2: ...WHERE...IN (...), когда значений будет много
+    // TODO: Что делать с дублирующимся кодом ниже?
     public function actionIndex() {
-        $user = Yii::$app->user->identity;
-        $charges = $user->chargesAsArray;
-        return $this->render('index', ['charges' => $charges]);
+//        $user = Yii::$app->user->identity;  //Новое: 6 запросов к бд, 60мс,  2.0с загрузка
+//        $charges = $user->charges;          //Старое: 11 запросов к бд, 110мс, 2.1с загрузка
+//        return $this->render('index_old', ['charges' => $charges]);
+        $user_id = Yii::$app->user->getId();
+        $user_category = UserCategory::find()
+            ->where(['user_id' => $user_id])
+            ->asArray()
+            ->all();
+        $categories = Category::find()
+            ->where(['in', 'id', array_column($user_category, 'category_id')])
+            ->asArray()
+            ->all();
+        $charges = Charge::find()
+            ->where(['in', 'user_category_id', array_column($user_category, 'id')])
+            ->asArray()
+            ->all();
+        return $this->render('index',
+            ['charges' => $charges,
+             'categories' => $categories,
+             'user_category' => $user_category]);
     }
 
     public function actionChargeAdd() {
@@ -68,7 +87,7 @@ class ChargeController extends Controller {
         $user = Yii::$app->user->identity;  // categories for dropList
         $categories = $user->categories;
         $category = $charge->category;  // set current category for dropList
-        $model->category_id = $category->id;
+        $model->category_id = $category->id;  //TODO: Оптимизировать с массивами
         return $this->render('charge_update', ['model' => $model, 'categories' => $categories]);
     }
 

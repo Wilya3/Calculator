@@ -27,6 +27,11 @@ class Category extends ActiveRecord {
             ->viaTable('user_category', ['category_id' => 'id']);
     }
 
+    public function getChargesAsArray() {
+        return $this->hasMany(Charge::class, ['user_category_id' => 'id'])
+            ->viaTable('user_category', ['category_id' => 'id'])->asArray()->all();
+    }
+
     public static function getName(int $id) {
         return self::findOne(['id' => $id])->name;
     }
