@@ -15,14 +15,13 @@ class ChargeForm extends Model {
     public $date;
     public $category_id;
 
-    public function rules() {  // TODO: разобраться с датой
+    public function rules(): array {  // TODO: разобраться с датой
         return [
             [['name', 'amount', 'category_id'], 'required'],
             [['name', 'description'], 'filter', 'filter' => '\yii\helpers\HtmlPurifier::process'],
             ['amount', 'number'],
             ['date', 'date', 'format' => 'php:Y-m-d'],
             ['category_id', 'isCategoryBelongsThisUser']
-//            ['category', 'in']
         ];
     }
 

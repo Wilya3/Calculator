@@ -5,6 +5,8 @@ namespace app\controllers;
 
 use app\models\Category;
 use app\models\CategoryForm;
+use app\models\Charge;
+use app\models\UserCategory;
 use Throwable;
 use Yii;
 use yii\filters\AccessControl;
@@ -28,24 +30,38 @@ class CategoryController extends Controller {
         ];  // TODO: APEX js      service entity repository
     }  // If any error occurred, redirect to site/index. If logged, redirect to graph/index
 
-    public function actionIndex() {
+    /**
+     * Find all categories which belong this user and charges sum for each category. Add 'sum' column into category
+     * @return string  //TODO: Перенести вычисление суммы в жс
+     */
+    public function actionIndex(): string {
         // Get categories
         $user = Yii::$app->user->identity;
-        $categories = $user->categoriesAsArray;  // (ActiveRecord) User->getCategories()->hasMany()
+        $categories = $user->categoriesAsArray;
+        foreach ($categories as &$category) {
+            $user_category = UserCategory::find()
+                ->where(['category_id' => $category['id'], 'user_id' => $user->id])->asArray()->one();
+            $category['sum'] = Charge::sumOfChargesByCategory($user_category['id']);
+        }
+        unset($category);
+
+        if (Yii::$app->request->isAjax) {
+            return $this->renderAjax('index', ['categories' => $categories]);
+        }
         return $this->render('index', ['categories' => $categories]);
     }
 
     /**
      * Add a new category, validate, save.
      * Unique name validator is used.
+     * @return string|Response
      */
     public function actionCategoryAdd() {
         $model = new CategoryForm();
-//        $model->scenario = CategoryForm::SCENARIO_ADD;  // required for validation
         if ($model->load(Yii::$app->request->post(), 'CategoryForm')) {
             if ($model->validate()) {
                 $model->save();
-                return $this->goHome();
+                return $this->goBack();
             }
         }
         return $this->render('category_add', ['model' => $model]);
@@ -63,14 +79,14 @@ class CategoryController extends Controller {
         if (is_null($category) || !$category->belongsThisUser() || $category->is_default == 1) {
             Yii::$app->session->setFlash('error',
                 'Ошибка! Данной категории не существует или ее нельзя изменять');
-            return $this->goHome();
+            return $this->goBack();
         }
         $model = new CategoryForm();
         if ($model->load(Yii::$app->request->post(), 'CategoryForm')) {
             $model->id = $id;
             if ($model->validate()) {
                 $model->save();
-                return $this->goHome();
+                return $this->goBack();
             }
         }
         $model->setAttributes($category->attributes);
@@ -97,9 +113,9 @@ class CategoryController extends Controller {
                 }
             }
         } catch (Throwable $e) {
-            Yii::$app->session->setFlash('error', 'Ошибка! Данной категории не существует.');
+            Yii::$app->session->setFlash('error', 'Ошибка удаления!');
         } finally {
-            return $this->goHome();
+            return $this->goBack();
         }
     }
 }

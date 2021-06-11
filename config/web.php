@@ -48,6 +48,13 @@ $config = [
             'showScriptName' => false
         ],
         'db' => $db,
+        'assetManager' => [
+            'bundles' => [
+                'yii\web\JqueryAsset'=> [
+                    'jsOptions' => ['position' => yii\web\View::POS_HEAD],
+                ],
+            ],
+        ],
     ],
     'params' => $params,
 ];

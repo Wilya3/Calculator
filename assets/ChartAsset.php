@@ -1,0 +1,18 @@
+<?php
+
+
+namespace app\assets;
+
+
+use yii\web\AssetBundle;
+
+class ChartAsset extends AssetBundle {
+    public $basePath = '@webroot';
+    public $baseUrl = '@web';
+    public $js = [
+        'https://cdn.jsdelivr.net/npm/apexcharts',
+        'js/chart.js',
+        'js/data_preparator.js',
+        'js/main.js'
+    ];
+}

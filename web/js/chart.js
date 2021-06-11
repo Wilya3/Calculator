@@ -1,30 +1,35 @@
 /**
- * This function get keys (X axis) and values (Y axis)
+ * This function get keys (X axis), values (Y axis) and chart options. Renders chart with incoming data.
  * @param keys
  * @param values
+ * @param optionsObj
+ * type: "bar"|"line"|"area" and others. <br />
+ * text: string(title) <br />
+ * valuesName: string <br />
+ * xaxisType: "category"|"datetime"|"numeric"
+ * @see https://apexcharts.com/docs/options/chart/type/
  */
-function chart(keys, values) {
+function drawChart(keys, values, optionsObj) {
     console.log(keys);
     console.log(values);
     var options = {
         title: {
-            text: "Расходы"
+            text: optionsObj.text
         },
         chart: {
-            type: 'bar',
+            type: optionsObj.type,
             height: 400,
         },
         series: [{
-            name: 'Сумма',
-            type: 'line',
+            name: optionsObj.valuesName,
             data: values
         }],
         xaxis: {
-            type: 'category',
+            type: optionsObj.xaxisType,
             categories: keys
         },
         yaxis: {
-            reversed: true
+            reversed: optionsObj.reversed
         }
     }
 

@@ -6,9 +6,8 @@
  * id, category_id
  * @param categories Object. It should contain:
  * id, name
- * @returns {any[][]} It returns multidimensional array, which consists of two arrays with related elements.
- * First array contains sums, second array contains related categories.
- * (For example: function returns [[200, 1500, 1000], ['food', 'car', 'travel']]. It means food spending was 200, car
+ * @returns {Map<string, float>} It returns map, which keys contains categories and values contains related sums.
+ * (For example: function returns {'food': 200, 'car': 1500, 'travel': 1000}. It means food spending was 200, car
  * spending was 1500 and travel spending was 1000).
  */  //TODO: нужны ли параметры функции или обойтись замыканиями?
 function prepareSumByCategory(charges, user_category, categories) {
@@ -20,10 +19,7 @@ function prepareSumByCategory(charges, user_category, categories) {
         let newSum = Math.round(oldSum + parseFloat(charge.amount));
         result.set(category.name, newSum);
     }
-
-    let cats = Array.from(result.keys());
-    let sums = Array.from(result.values());
-    return [sums, cats];
+    return result;
 }
 
 function getCategoryByCharge(charge, user_category, categories) {

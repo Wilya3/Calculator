@@ -40,7 +40,6 @@ AppAsset::register($this);
         'items' => [
             ['label' => 'Главная', 'url' => ['/site/index']],
             ['label' => 'Записи', 'url' => ['/charge/index']],
-            ['label' => 'Категории', 'url' => ['/category/index']],
             Yii::$app->user->isGuest ? (
                 ['label' => 'Вход', 'url' => ['/site/login']]
             ) : (
@@ -59,9 +58,6 @@ AppAsset::register($this);
     ?>
 
     <div class="container">
-        <h1>
-            Добро пожаловать, <?= Yii::$app->user->identity->username; ?>!
-        </h1>
         <?= Breadcrumbs::widget([
             'links' => isset($this->params['breadcrumbs']) ? $this->params['breadcrumbs'] : [],
         ]) ?>

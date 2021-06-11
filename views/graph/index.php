@@ -1,25 +1,26 @@
 <?php
+
+use app\assets\ChartAsset;
+
+ChartAsset::register($this);
+
 if (Yii::$app->session->hasFlash('error')) {
     $flash = Yii::$app->session->getFlash('error');
-} ?>
-<script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
+}?>
 
 
-<h3>Графики</h3>
+<h1>Добро пожаловать, <?= Yii::$app->user->identity->username; ?>!</h1>
+
 <div id="chart"></div>
+<div id="categories"></div>
 
-
-<?php
-//TODO: Не нужно ли вызывать action? Это MVC не противоречит?
-include_once __DIR__ . '/../charge/index.php';
-include_once __DIR__ . '/../category/index.php';
-?>
-
-
+<!--Render table of categories-->
+<script>$("#categories").load("http://calculator/category/index");</script>
+<!--Data for charts render-->
 <script>
-    // All these constants are required to create charts. They are used in closures. Forbidden to rename!
+    // All these constants are required to create charts. Forbidden to rename!
     // Each constant represents corresponding table.
-    const categories = <?= json_encode($categories) ?>;
+    const categories = <?= json_encode($categories) ?>//;
     const charges = <?= json_encode($charges) ?>;
     const user_category = <?= json_encode($user_category) ?>;
 </script>

@@ -26,9 +26,10 @@ class GraphController extends Controller {
             ],
         ];
     }  // If any error occurred, redirect to site/index. If logged, redirect to graph/index
-
+        // TODO: виджет времени. Для конкретной категории/записи сделать
     /**
-     * This action returns graph/index.php, which includes category and charge tables. So it also prepares data for them
+     * This action returns graph/index.php, which includes category and charge tables.
+     * So it also prepares data for them
      * @return string
      */
     public function actionIndex(): string {
@@ -47,44 +48,9 @@ class GraphController extends Controller {
             ->asArray()
             ->all();
 
-//        $data = $this->prepareDataForGraphs($charges, $categories);
         return $this->render('index',
             ['charges' => $charges,
             'categories' => $categories,
             'user_category' => $user_category]);
-//            'data' => $data]);
     }
-
-//    public function prepareDataForGraphs($charges, $categories): array {
-//
-////        $data['date_sum']['date'] = $this->getDates($charges);
-//        $data['date_sum'] = $this->getSumByDate($charges);
-//        return $data;
-//    }
-//
-//    public function getSumByDate($charges): array {
-//        // sorting charges by date
-//        $this->sortByField($charges, 'date');
-//
-//        // get sum for each date
-//        $sumByDate = [];
-//        foreach ($charges as $charge) {
-//            $sumByDate[$charge['date']] += $charge['amount'];
-//        }
-//        return $sumByDate;
-//    }
-//
-//    public function sortByField($array, string $field) {
-//        usort($array, function($a, $b) use ($field) {
-//            return strcmp($a["{$field}"], $b["{$field}"]);
-//        });
-//    }
-//
-////    public function getDates($charges): array {
-////        $result = [];
-////        foreach ($charges as $charge) {
-////            $result[] = $charge['date'];
-////        }
-////        return $result;
-////    }
 }

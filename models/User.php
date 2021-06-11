@@ -3,34 +3,39 @@
 
 namespace app\models;
 
+use yii\db\ActiveQuery;
 use yii\db\ActiveRecord;
 use yii\web\IdentityInterface;
 
 /**
  * Table 'user' from DB 'calculator'
- * id INT UNSIGNED PK
- * username VARCHAR(30) UK
- * password VARCHAR(255)
- * email VARCHAR(255) UK
+ * - id UNSIGNED PK
+ * - username VARCHAR(30) UK
+ * - password VARCHAR(255)
+ * - email VARCHAR(255) UK
+ * @property int id UNSIGNED PK
+ * @property string username VARCHAR(30) UK
+ * @property string password VARCHAR(255)
+ * @property string email VARCHAR(255) UK
  */
 class User extends ActiveRecord implements IdentityInterface {
 
-    public function getCategories() {
+    public function getCategories(): ActiveQuery {
 	    return $this->hasMany(Category::class, ['id' => 'category_id'])
             ->viaTable('user_category', ['user_id' => 'id']);
     }
 
-    public function getCategoriesAsArray() {
+    public function getCategoriesAsArray(): array {
         return $this->hasMany(Category::class, ['id' => 'category_id'])
             ->viaTable('user_category', ['user_id' => 'id'])->asArray()->all();
     }
 
-    public function getCharges() {
+    public function getCharges(): ActiveQuery {
         return $this->hasMany(Charge::class, ['user_category_id' => 'id'])
             ->viaTable('user_category', ['user_id' => 'id'])->with('category');
     }
 
-    public function getChargesAsArray() {
+    public function getChargesAsArray(): array {
         return $this->hasMany(Charge::class, ['user_category_id' => 'id'])
             ->viaTable('user_category', ['user_id' => 'id'])->with('category')->asArray()->all();
     }

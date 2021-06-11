@@ -12,15 +12,19 @@
         <tr>
             <th>Название</th>
             <th>Описание</th>
+            <th>Сумма</th>
             <th></th>
             <th></th>
         </tr>
         <?php foreach($categories as $row): ?>
         <tr>
-            <td> <?= $row['name']?> </td>
-            <td> <?= $row['description'] ?> </td>
             <td>
-                <?php if ($row['is_default'] === 0): ?>
+                <a id="<?= $row['name']?>" href="/charge/charges-by-category?id=<?= $row['id'] ?>"><?= $row['name']?> </a>
+            </td>
+            <td> <?= $row['description'] ?> </td>
+            <td> <?= $row['sum'] ?>         </td>
+            <td>
+                <?php if ($row['is_default'] == 0): ?>
                 <a href="/category/category-update?id=<?= $row['id'] ?>">Изменить</a>
                 <?php endif; ?>
             </td>
