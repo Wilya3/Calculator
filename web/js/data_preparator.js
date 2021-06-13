@@ -9,7 +9,7 @@
  * @returns {Map<string, float>} It returns map, which keys contains categories and values contains related sums.
  * (For example: function returns {'food': 200, 'car': 1500, 'travel': 1000}. It means food spending was 200, car
  * spending was 1500 and travel spending was 1000).
- */  //TODO: нужны ли параметры функции или обойтись замыканиями?
+ */
 function prepareSumByCategory(charges, user_category, categories) {
     let result = new Map();
     for (let charge of charges) {

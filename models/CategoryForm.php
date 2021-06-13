@@ -61,12 +61,19 @@ class CategoryForm extends Model {
         $category->save();
     }
 
-    public function isNameChanged(): bool { // TODO: Такую бизнес-логику надо выносить куда-то
+    /**
+     * Check new name is not equals name in DB
+     * @return bool
+     */
+    public function isNameChanged(): bool {
         return (!is_null($this->id) && Category::getName($this->id) !== $this->name);
     }
 
-    // TODO: просто проверять на id === null (id в форме используется только при update), либо проверять на сценарий добавления?
+    /**
+     * Check, is category being added
+     * @return bool
+     */
     public function isAddingCategory(): bool {
-        return is_null($this->id);
+        return is_null($this->id);  // If category is being added, it has not an id
     }
 }

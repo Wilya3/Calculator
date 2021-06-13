@@ -34,7 +34,6 @@ class GraphController extends Controller {
      */
     public function actionIndex(): string {
         $user_id = Yii::$app->user->getId();
-//TODO: Удалить комменты
         $user_category = UserCategory::find()
             ->where(['user_id' => $user_id])
             ->asArray()

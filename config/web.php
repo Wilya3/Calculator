@@ -45,7 +45,17 @@ $config = [
         ],
         'urlManager' => [
             'enablePrettyUrl' => true,
-            'showScriptName' => false
+            'showScriptName' => false,
+            'rules' => [
+                [
+                    'pattern' => 'charge/charge-add',
+                    'route' => 'charge/charge-add',
+                ],
+                [
+                    'pattern' => 'charge/charge-add?category_id=<category_id:\d+>',
+                    'route' => 'charge/charge-add',
+                ],
+            ],
         ],
         'db' => $db,
         'assetManager' => [

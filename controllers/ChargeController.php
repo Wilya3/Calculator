@@ -27,24 +27,47 @@ class ChargeController extends Controller {
             ],
         ];
     }  // If any error occurred, redirect to site/index. If logged, redirect to graph/index
-
+    //TODO: Добавить "авторов" :)
 
     /**
-     * Renders all charges
+     * Renders all charges as array. Adds two new columns to each charge: category_id and category_name
      * @return string
      */
     public function actionIndex() {
-        $user = Yii::$app->user->identity;  //Новое: 6 запросов к бд, 60мс,  2.0с загрузка
-        $charges = $user->charges;          //Старое: 11 запросов к бд, 110мс, 2.1с загрузка
+        $user_id = Yii::$app->user->getId();
+        $charges = Charge::find()
+            ->select(['charge.*', 'category.id AS category_id', 'category.name AS category_name'])
+            ->join('INNER JOIN', 'user_category', '`charge`.`user_category_id` = `user_category`.`id`')
+            ->join('INNER JOIN', 'category', '`user_category`.`category_id` = `category`.`id`')
+            ->where(['user_category.user_id' => $user_id])
+            ->asArray()
+            ->all();
         return $this->render('index', ['charges' => $charges]);
+    }
+
+    /**
+     * Renders charges only for one category, which id is received. Sends charges as array.
+     * Before all, checks is this category belongs this user.
+     * If error occurred, sets flash message into the session
+     * @param int $id id of the category, to which the charges are linked
+     * @return string
+     */
+    public function actionChargesByCategory(int $id=null): string {
+        $category = Category::findOne(['id' => $id]);
+        if (!$category->belongsThisUser()) {
+            Yii::$app->session->setFlash('error', 'Ошибка! Данной записи не существует!');
+        }
+        $charges = $category->chargesAsArray;
+        return $this->render('index', ['charges' => $charges, 'category' => $category]);
     }
 
     /**
      * Adds a new charge, validate, save.
      * If GET - renders empty form with filled dropList of categories
+     * @param int|null $category_id id of the category, which will be the default value of dropList
      * @return string|Response If success, redirect to charge/charges-by-category
      */
-    public function actionChargeAdd() {
+    public function actionChargeAdd(int $category_id = null) {
         $model = new ChargeForm();
         if ($model->load(Yii::$app->request->post(), 'ChargeForm')) {
             if ($model->validate()) {
@@ -53,6 +76,9 @@ class ChargeController extends Controller {
             }
         }
         // collect categories for dropList
+        if (!is_null($category_id)) {
+            $model->category_id = $category_id;
+        }
         $user = Yii::$app->user->identity;
         $categories = $user->categories;
         return $this->render('charge_add', ['model' => $model, 'categories' => $categories]);
@@ -108,21 +134,5 @@ class ChargeController extends Controller {
         finally {
             return $this->redirect(Yii::$app->request->referrer ?: Yii::$app->homeUrl);
         }
-    }
-
-    /**
-     * Renders charges only for one category, which id is received.
-     * Before all, checks is this category belongs this user.
-     * If error occurred, sets flash message into the session
-     * @param int $id id of the category, to which the charges are linked
-     * @return string
-     */
-    public function actionChargesByCategory(int $id) {
-        $category = Category::findOne(['id' => $id]);
-        if (!$category->belongsThisUser()) {
-            Yii::$app->session->setFlash('error', 'Ошибка! Данной записи не существует!');
-        }
-        $charges = $category->chargesAsArray;
-        return $this->render('one_category', ['charges' => $charges, 'category' => $category]);
     }
 }

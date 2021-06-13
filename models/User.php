@@ -37,7 +37,7 @@ class User extends ActiveRecord implements IdentityInterface {
 
     public function getChargesAsArray(): array {
         return $this->hasMany(Charge::class, ['user_category_id' => 'id'])
-            ->viaTable('user_category', ['user_id' => 'id'])->with('category')->asArray()->all();
+            ->viaTable('user_category', ['user_id' => 'id'])->asArray()->all();
     }
 
     /**

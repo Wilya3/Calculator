@@ -31,19 +31,20 @@ class CategoryController extends Controller {
     }  // If any error occurred, redirect to site/index. If logged, redirect to graph/index
 
     /**
-     * Find all categories which belong this user and charges sum for each category. Add 'sum' column into category
-     * @return string  //TODO: Перенести вычисление суммы в жс
+     * Find all categories that belong this user.
+     * Add 'sum' column into each category array which represents sum of charges for this category.
+     * @return string render with layout or without if ajax
      */
-    public function actionIndex(): string {
-        // Get categories
-        $user = Yii::$app->user->identity;
-        $categories = $user->categoriesAsArray;
-        foreach ($categories as &$category) {
-            $user_category = UserCategory::find()
-                ->where(['category_id' => $category['id'], 'user_id' => $user->id])->asArray()->one();
-            $category['sum'] = Charge::sumOfChargesByCategory($user_category['id']);
-        }
-        unset($category);
+    public function actionIndex(): string { //TODO: БАГ! Если нет записей, не выводит категории
+        $user_id = Yii::$app->user->getId();
+        $categories = Category::find()
+            ->select(['`category`.*', 'SUM(`charge`.`amount`) AS sum'])
+            ->join('INNER JOIN', 'user_category', '`category`.`id` = `user_category`.`category_id`')
+            ->join('LEFT JOIN', 'charge', '`user_category`.`id` = `charge`.`user_category_id`')
+            ->where("`user_category`.`user_id` = {$user_id}")
+            ->groupBy(['`category`.`id`'])
+            ->asArray()
+            ->all();
 
         if (Yii::$app->request->isAjax) {
             return $this->renderAjax('index', ['categories' => $categories]);
@@ -53,7 +54,6 @@ class CategoryController extends Controller {
 
     /**
      * Add a new category, validate, save.
-     * Unique name validator is used.
      * @return string|Response
      */
     public function actionCategoryAdd() {
@@ -61,7 +61,7 @@ class CategoryController extends Controller {
         if ($model->load(Yii::$app->request->post(), 'CategoryForm')) {
             if ($model->validate()) {
                 $model->save();
-                return $this->goBack();
+                return $this->goHome();
             }
         }
         return $this->render('category_add', ['model' => $model]);
@@ -79,14 +79,14 @@ class CategoryController extends Controller {
         if (is_null($category) || !$category->belongsThisUser() || $category->is_default == 1) {
             Yii::$app->session->setFlash('error',
                 'Ошибка! Данной категории не существует или ее нельзя изменять');
-            return $this->goBack();
+            return $this->goHome();
         }
         $model = new CategoryForm();
         if ($model->load(Yii::$app->request->post(), 'CategoryForm')) {
             $model->id = $id;
             if ($model->validate()) {
                 $model->save();
-                return $this->goBack();
+                return $this->goHome();
             }
         }
         $model->setAttributes($category->attributes);
@@ -115,7 +115,7 @@ class CategoryController extends Controller {
         } catch (Throwable $e) {
             Yii::$app->session->setFlash('error', 'Ошибка удаления!');
         } finally {
-            return $this->goBack();
+            return $this->goHome();
         }
     }
 }

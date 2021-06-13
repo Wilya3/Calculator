@@ -5,6 +5,7 @@ namespace app\models;
 
 
 use Yii;
+use yii\db\ActiveQuery;
 use yii\db\ActiveRecord;
 
 
@@ -23,13 +24,13 @@ use yii\db\ActiveRecord;
  * @property string date DATE
  * @property int user_category_id UNSIGNED
  */
-class Charge extends ActiveRecord { //TODO: Делать ли property
+class Charge extends ActiveRecord {
 
     public static function tableName(): string {
         return 'charge';
     }
 
-    public function getCategory() {
+    public function getCategory(): ActiveQuery {
         return $this->hasOne(Category::class, ['id' => 'category_id'])
             ->viaTable('user_category', ['id' => 'user_category_id']);
     }
@@ -41,7 +42,7 @@ class Charge extends ActiveRecord { //TODO: Делать ли property
 
     /**
      * Find sum of charges for category
-     * @param array $category
+     * @param int $user_category_id
      * @return float
      */
     public static function sumOfChargesByCategory(int $user_category_id) {
