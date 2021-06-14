@@ -1,3 +1,5 @@
+var chart = undefined;
+
 /**
  * This function get keys (X axis), values (Y axis) and chart options. Renders chart with incoming data.
  * @param keys
@@ -12,7 +14,7 @@
 function drawChart(keys, values, optionsObj) {
     console.log(keys);
     console.log(values);
-    var options = {
+    let options = {
         title: {
             text: optionsObj.text
         },
@@ -33,7 +35,10 @@ function drawChart(keys, values, optionsObj) {
         }
     }
 
-    var chart = new ApexCharts(document.querySelector("#chart"), options);
-
+    if (typeof chart != 'undefined') {
+        // chart.updateOptions(options);
+        chart.destroy();
+    }
+    chart = new ApexCharts(document.querySelector("#chart"), options);
     chart.render();
 }
