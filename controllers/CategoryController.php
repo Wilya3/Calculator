@@ -35,7 +35,7 @@ class CategoryController extends Controller {
      * Add 'sum' column into each category array which represents sum of charges for this category.
      * @return string render with layout or without if ajax
      */
-    public function actionIndex(): string { //TODO: БАГ! Если нет записей, не выводит категории
+    public function actionIndex(): string {
         $user_id = Yii::$app->user->getId();
         $categories = Category::find()
             ->select(['`category`.*', 'SUM(`charge`.`amount`) AS sum'])
@@ -47,9 +47,9 @@ class CategoryController extends Controller {
             ->all();
 
         if (Yii::$app->request->isAjax) {
-            return $this->renderAjax('index', ['categories' => $categories]);
+            return $this->renderAjax('category_grid_view', ['categories' => $categories]);
         }
-        return $this->render('index', ['categories' => $categories]);
+        return $this->render('category_grid_view', ['categories' => $categories]);
     }
 
     /**

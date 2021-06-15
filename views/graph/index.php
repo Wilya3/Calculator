@@ -1,9 +1,9 @@
 <?php
-
-use app\assets\ChartAsset;
+//TODO: спросить про круг
+use app\assets\ChartCategoriesAsset;
 use kartik\date\DatePicker;
 
-ChartAsset::register($this);
+ChartCategoriesAsset::register($this);
 
 if (Yii::$app->session->hasFlash('error')) {
     $flash = Yii::$app->session->getFlash('error');
@@ -55,7 +55,7 @@ if (Yii::$app->session->hasFlash('error')) {
 <!--Render table of categories-->
 <h2>Категории</h2>
 <div id="categories"></div>
-<script>$("#categories").load("http://calculator/category/index");</script>
+<script>$("#categories").load("//calculator/category/index");</script>
 
 
 <!--Data for charts render-->

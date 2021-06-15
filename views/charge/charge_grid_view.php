@@ -1,6 +1,7 @@
 <?php
 use yii\data\ArrayDataProvider;
 use yii\grid\GridView;
+use yii\widgets\Pjax;
 
 /**
  * If charges are shown for only one category, the category name will not be displayed
@@ -20,7 +21,7 @@ $providerOptions = [
 $dataProvider = new ArrayDataProvider($providerOptions);
 
 $gridOptions = [
-    'id' => 'categories_gridview',
+    'id' => 'charges_gridview',
     'dataProvider' => $dataProvider,
     'options' => ['style' => 'font-size:17px;'],
     'columns' => [
@@ -75,11 +76,13 @@ if (!is_null($charges[0]['category_name'])) {
     array_splice($gridOptions['columns'], $length - 1, 0, [$column_category]);
 }
 
+Pjax::begin(['id' => 'charges_pjax', 'enablePushState' => false]);
 try {
     echo GridView::widget($gridOptions);
 } catch (Exception $e) {
     echo "Ошибка обработки данных";
 }
+Pjax::end();
 
 $url = is_null($category['id'])?"":"?category_id=".$category['id'];
 ?>

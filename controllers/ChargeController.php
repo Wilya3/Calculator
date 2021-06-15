@@ -42,7 +42,7 @@ class ChargeController extends Controller {
             ->where(['user_category.user_id' => $user_id])
             ->asArray()
             ->all();
-        return $this->render('index', ['charges' => $charges]);
+        return $this->render('charge_grid_view', ['charges' => $charges]);
     }
 
     /**
@@ -50,15 +50,16 @@ class ChargeController extends Controller {
      * Before all, checks is this category belongs this user.
      * If error occurred, sets flash message into the session
      * @param int $id id of the category, to which the charges are linked
-     * @return string
+     * @return string|Response
      */
     public function actionChargesByCategory(int $id=null): string {
         $category = Category::findOne(['id' => $id]);
         if (!$category->belongsThisUser()) {
             Yii::$app->session->setFlash('error', 'Ошибка! Данной записи не существует!');
+            return $this->goHome();
         }
         $charges = $category->chargesAsArray;
-        return $this->render('index', ['charges' => $charges, 'category' => $category]);
+        return $this->render('charge_by_category', ['charges' => $charges, 'category' => $category]);
     }
 
     /**

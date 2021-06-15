@@ -20,7 +20,7 @@ $dataProvider = new ArrayDataProvider([
         'attributes' => ['name', 'sum'],
     ],
 ]);
-Pjax::begin(['id' => 'categories_pjax', 'enablePushState' => false]);  // TODO: Перезагрузка, а надо аякс
+Pjax::begin(['id' => 'categories_pjax', 'enablePushState' => false]);
 try {
     echo GridView::widget([
         'id' => 'categories_gridview',
@@ -72,7 +72,7 @@ try {
 } catch (Exception $e) {
     echo "Ошибка обработки данных";
 }
-Pjax::end()
+Pjax::end();
 ?>
 
 <?php //if (count($categories) > 0): ?>
