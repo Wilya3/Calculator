@@ -17,16 +17,18 @@ function getSumByCategory(charges, user_category, categories, start_date, end_da
     let result = new Map();
     for (let charge of charges) {
         let category = findCategoryByCharge(charge, user_category, categories);
-        if (!result.has(category.name)) result.set(category.name, 0);
 
         let date = new Date(charge.date);
         if (!checkDate(date, start_date, end_date)) {
             continue;
         }
-
-        let oldSum = result.get(category.name);
-        let newSum = Math.round(oldSum + parseFloat(charge.amount));
-        result.set(category.name, newSum);
+        if (result.has(category.name)) {
+            let oldSum = result.get(category.name);
+            let newSum = Math.round(oldSum + parseFloat(charge.amount));
+            result.set(category.name, newSum);
+        } else {
+            result.set(category.name, Math.round(parseFloat(charge.amount)));
+        }
     }
     return result;
 }
@@ -58,7 +60,6 @@ function findCategoryByCharge(charge, user_category, categories) {
                     return category;
                 }
             }
-
         }
     }
     throw new ReferenceError('There is no any category, which references to this charge.');
@@ -66,21 +67,29 @@ function findCategoryByCharge(charge, user_category, categories) {
 
 /**
  * This function gets table of charges and returns a map,
- * that contains pairs of charge name and it's amount.
+ * that contains pairs of date and sum.
  * Takes only those charges that are included in the time period between start_date and end_date
  * @param charges Array of objects. Object should contain: id, category_id
  * @param start_date Date
  * @param end_date Date
- * @returns {Map<string, float>}
+ * @returns {Map<string, float>} It returns map, which keys contains dates and values contains related sums.
  */
-function getSumByCharge(charges, start_date, end_date) {
+function getSumByDate(charges, start_date, end_date) {
     let result = new Map();
     for (let charge of charges) {
-        let date = new Date(charge.date);
-        if (!checkDate(date, start_date, end_date)) {
+        let rawDate = new Date(charge.date);
+        if (!checkDate(rawDate, start_date, end_date)) {
             continue;
         }
-        result.set(charge.name, charge.amount);
+        let date = rawDate.getFullYear()+"-"+(rawDate.getMonth() + 1)+"-"+rawDate.getDate();
+
+        if (result.has(date)) {
+            let oldSum = result.get(date);
+            let newSum = Math.round(oldSum + parseFloat(charge.amount));
+            result.set(date, newSum);
+        } else {
+            result.set(date, Math.round(parseFloat(charge.amount)));
+        }
     }
     return result;
 }

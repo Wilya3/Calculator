@@ -58,7 +58,13 @@ class ChargeController extends Controller {
             Yii::$app->session->setFlash('error', 'Ошибка! Данной записи не существует!');
             return $this->goHome();
         }
-        $charges = $category->chargesAsArray;
+        $user_id = Yii::$app->user->getId();
+        $charges = Charge::find()
+            ->join('INNER JOIN', 'user_category', '`user_category_id` = `user_category`.`id`')
+            ->where("`user_category`.`user_id` = $user_id")
+            ->andWhere("`user_category`.`category_id` = $id")
+            ->asArray()
+            ->all();
         return $this->render('charge_by_category', ['charges' => $charges, 'category' => $category]);
     }
 

@@ -20,7 +20,6 @@ function dateChange() {
     if (start_date == "Invalid Date" ||
         end_date == "Invalid Date"   ||
         start_date > end_date) {
-        console.log("Ошибка");
         return;
     }
     console.log(start_date);

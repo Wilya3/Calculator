@@ -49,7 +49,7 @@ if (Yii::$app->session->hasFlash('error')) {
         ]); ?>
     </div>
 </div>
-<div id="chart"></div>
+<div id="chart" style="width='100%'"></div>
 
 
 <!--Render table of categories-->
