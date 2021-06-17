@@ -88,8 +88,8 @@ class Chart {
         },
         chart: {
             type: "bar",
-            height: document.documentElement.clientHeight * 0.7,
-            width: "80%"
+            height: document.documentElement.clientHeight * 0.533,
+            redrawOnParentResize: true,
         },
         plotOptions: {
             bar: {
@@ -97,8 +97,8 @@ class Chart {
                 columnWidth: "60%",
                 distributed: true,
                 dataLabels: {
-                    position: "bottom"
-                }
+                    position: "center"
+                },
             }
         },
         series: [{
@@ -111,11 +111,16 @@ class Chart {
         },
         xaxis: {
             type: "categories",
-            // colors: ["#FF4500", "#1E90FF", "#FF69B4", '#7B68EE', '#9ACD32', '#FFD700', '#98FB98', '#FFDEAD'],
-            labels: {
-                show: false,
-            },
+            // labels: {
+            //     show: true,
+            // },
         },
+        legend: {
+            show: false,
+        },
+        // yaxis: {
+        //     reversed: true,
+        // },
         tooltip: {
             followCursor: false,
             intersect: false,
@@ -125,10 +130,15 @@ class Chart {
     static PIE_OPTIONS = {
         chart: {
             type: "pie",
-            width: "40%",
-            height: document.documentElement.clientHeight * 0.75,
+            // width: "40%",
+            height: document.documentElement.clientHeight * 0.55,
+            parentHeightOffset: 0,
+            redrawOnParentResize: true,
         },
-        series: [],
+        title: {
+            text: "",
+        },
+        series: [{}],
     };
 }
     class ValueError extends Error {

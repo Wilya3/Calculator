@@ -6,7 +6,6 @@ function createChart(start_date, end_date) {
     const result = getSumByDate(charges, start_date, end_date);
     let preparedDates = Array.from(result.keys());
     let preparedCharges = Array.from(result.values());
-    // chart.drawChart(preparedDates, preparedCharges, Chart.BAR_OPTIONS, "Сумма по дате");
     try {
         chart.drawChart(preparedDates, preparedCharges, Chart.BAR_OPTIONS, "Сумма по дате");
     } catch (e) {

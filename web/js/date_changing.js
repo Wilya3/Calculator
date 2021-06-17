@@ -12,17 +12,29 @@ $(window).on("load", function() {
     end_date_element.change(dateChange);
 });
 
-
+/**
+ * Get dates from start_date_element and end_date_element.
+ * Checks are they correct. Calls createChart() function.
+ * If date is incorrect, sets the value as today.
+ * If the value of start_date_element is greater than value of end_date_element,
+ * sets the end_date_element's value to both.
+ */
 function dateChange() {
     let start_date = new Date(start_date_element.val());
     let end_date = new Date(end_date_element.val());
 
-    if (start_date == "Invalid Date" ||
-        end_date == "Invalid Date"   ||
-        start_date > end_date) {
-        return;
+    if (start_date == "Invalid Date") {
+        start_date = new Date().toISOString().slice(0, 10);
+        start_date_element.val(start_date);
     }
-    console.log(start_date);
-    console.log(end_date);
+    if (end_date == "Invalid Date") {
+        end_date = new Date().toISOString().slice(0, 10);
+        end_date_element.val(end_date);
+    }
+    if (start_date > end_date) {
+        start_date = end_date.toISOString().slice(0, 10);
+        start_date_element.val(start_date);
+    }
+
     createChart(start_date, end_date);
 }
