@@ -32,7 +32,7 @@ function getSumByCategory(charges, user_category, categories, start_date, end_da
     }
     return result;
 }
-
+// TODO: Сортировать по категориям
 /**
  * Is date between start_date and end_date
  * @param date Date
@@ -73,7 +73,7 @@ function findCategoryByCharge(charge, user_category, categories) {
  * @param start_date Date
  * @param end_date Date
  * @returns {Map<string, float>} It returns map, which keys contains dates and values contains related sums.
- */
+ */  // TODO: Сортировать по дате
 function getSumByDate(charges, start_date, end_date) {
     let result = new Map();
     for (let charge of charges) {

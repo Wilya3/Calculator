@@ -8,6 +8,7 @@ use app\models\User;
 use Yii;
 use yii\filters\AccessControl;
 use yii\web\Controller;
+use yii\web\Response;
 
 class SiteController extends Controller {
 
@@ -31,8 +32,13 @@ class SiteController extends Controller {
             ],
         ];
     }  // If any error occurred, redirect to site/index. If logged, redirect to graph/index
+    // TODO: Error handler сделать, "забыли пароль". Добавить "авторов" :)
 
-    public function actionError() {
+    /**
+     * If any error occurred, redirect to site/index
+     * @return Response
+     */
+    public function actionError(): Response {
         return $this->redirect(['site/index']);
     }
 
@@ -49,7 +55,7 @@ class SiteController extends Controller {
 		if ($model->load(Yii::$app->request->post())) {
 			if ($model->validate()) {
 				$model->save();
-                Yii::$app->user->login(User::findUser($model->username), 3600*24*30);
+                Yii::$app->user->login(User::findOne(['username' => $model->username]), 3600*24*30);
                 return $this->redirect(['graph/index']);
             }
 		}
@@ -62,14 +68,14 @@ class SiteController extends Controller {
 		if (Yii::$app->request->post('LoginForm')) {
             $model->attributes = Yii::$app->request->post('LoginForm');
             if ($model->validate()) {
-                Yii::$app->user->login(User::findUser($model->username), 3600*24*30);
+                Yii::$app->user->login(User::findOne(['username' => $model->username]), 3600*24*30);
                 return $this->redirect(['graph/index']);
             }
         }
 		return $this->render('login', ['model' => $model]);
 	}
 
-	public function actionLogout() {
+	public function actionLogout(): Response {
         Yii::$app->user->logout();
         return $this->goHome();
     }

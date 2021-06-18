@@ -26,10 +26,11 @@ class GraphController extends Controller {
             ],
         ];
     }  // If any error occurred, redirect to site/index. If logged, redirect to graph/index
-        // TODO: виджет времени. Для конкретной категории/записи сделать
+
     /**
-     * This action returns graph/index.php, which includes category and charge tables.
-     * So it also prepares data for them
+     * This action returns graph/index.php, which includes category table.
+     * It also returns to view tables 'category', 'user_category' and 'charge' with data belongs current user.
+     * These tables are required by charts
      * @return string
      */
     public function actionIndex(): string {

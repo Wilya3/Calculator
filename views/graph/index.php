@@ -1,5 +1,5 @@
 <?php
-//TODO: спросить про круг
+
 use app\assets\ChartCategoriesAsset;
 use kartik\date\DatePicker;
 

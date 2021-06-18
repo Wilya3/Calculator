@@ -49,15 +49,14 @@ class Category extends ActiveRecord {
         }
     }
 
-
+    /**
+     * Check is category belongs currently authorized user
+     * @return bool
+     */
     public function belongsThisUser(): bool {
-        $user_categories = UserCategory::find()->where(['category_id' => $this->id])->asArray()->all();
-        foreach ($user_categories as $user_category){
-            if ($user_category['user_id'] == Yii::$app->user->getId()) {
-                return true;
-            }
-        }
-        return false;
+        $user_id = Yii::$app->user->getId();
+        $user_category = UserCategory::find()->where(['category_id' => $this->id])->andWhere(['user_id' => $user_id])->asArray()->one();
+        return !is_null($user_category);
     }
 
     /**

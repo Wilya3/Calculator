@@ -5,8 +5,6 @@ namespace app\controllers;
 
 use app\models\Category;
 use app\models\CategoryForm;
-use app\models\Charge;
-use app\models\UserCategory;
 use Throwable;
 use Yii;
 use yii\filters\AccessControl;
@@ -27,12 +25,13 @@ class CategoryController extends Controller {
                     ],
                 ],
             ],
-        ];  // TODO: APEX js      service entity repository
+        ];
     }  // If any error occurred, redirect to site/index. If logged, redirect to graph/index
 
     /**
-     * Find all categories that belong this user.
-     * Add 'sum' column into each category array which represents sum of charges for this category.
+     * Renders all categories that belong this user.
+     * Adds 'sum' column to the each category. It represents sum of charges for this category.
+     * Categories are returned as array.
      * @return string render with layout or without if ajax
      */
     public function actionIndex(): string {
@@ -41,7 +40,7 @@ class CategoryController extends Controller {
             ->select(['`category`.*', 'SUM(`charge`.`amount`) AS sum'])
             ->join('INNER JOIN', 'user_category', '`category`.`id` = `user_category`.`category_id`')
             ->join('LEFT JOIN', 'charge', '`user_category`.`id` = `charge`.`user_category_id`')
-            ->where("`user_category`.`user_id` = {$user_id}")
+            ->where("`user_category`.`user_id` = $user_id")
             ->groupBy(['`category`.`id`'])
             ->asArray()
             ->all();
@@ -53,7 +52,8 @@ class CategoryController extends Controller {
     }
 
     /**
-     * Add a new category, validate, save.
+     * Renders empty category form.
+     * If POST - adds a new category, validate, save.
      * @return string|Response
      */
     public function actionCategoryAdd() {
@@ -68,20 +68,23 @@ class CategoryController extends Controller {
     }
 
     /**
-     * Sets up the POST values into the category with $id.
+     * Renders category with $id. Changes category if POST.
      * Only a custom category owned by current user can be changed.
      * Else flash message is saved into the session, nothing is changed
      * @param int $id category id to update
      * @return string|Response redirect home
      */
-    public function actionCategoryUpdate(int $id) {  // TODO: Refactor
+    public function actionCategoryUpdate(int $id) {
+        // Check category changing is allowed
         $category = Category::findOne(['id' => $id]);
         if (is_null($category) || !$category->belongsThisUser() || $category->is_default == 1) {
             Yii::$app->session->setFlash('error',
                 'Ошибка! Данной категории не существует или ее нельзя изменять');
             return $this->goHome();
         }
+
         $model = new CategoryForm();
+        // Validate POST-data and save
         if ($model->load(Yii::$app->request->post(), 'CategoryForm')) {
             $model->id = $id;
             if ($model->validate()) {
@@ -89,14 +92,15 @@ class CategoryController extends Controller {
                 return $this->goHome();
             }
         }
+        // If GET set old values into the model
         $model->setAttributes($category->attributes);
         return $this->render('category_update', ['model' => $model]);
     }
 
     /**
-     * Deletes the relation between this (authorized) user and category with id received by GET-request.
-     * If the category belongs to the user, it will be deleted from 'category' table.
-     * If error has been caught, set flash message into session.
+     * Deletes the relation between this (authorized) user and category with $id.
+     * If the category belongs to the user, it will be also deleted from 'category' table.
+     * If error has been caught, sets the flash message into the session.
      * @param int $id category id to delete
      * @return Response redirect home
      */
@@ -105,7 +109,7 @@ class CategoryController extends Controller {
             $category = Category::findOne(['id' => $id]);
             if (!is_null($category) && $category->belongsThisUser()) {
 
-                // delete relation from junction table. Need for default categories
+                // delete relation from junction table. Default categories are not deleted, only the relation is removed.
                 $category->unlink('users', Yii::$app->user->identity, true);
 
                 if ($category->is_default == 0) { // if category was created by user, delete it from table Category

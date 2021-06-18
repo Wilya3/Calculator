@@ -4,6 +4,7 @@
 namespace app\models;
 
 
+use DateTime;
 use Yii;
 use yii\base\Model;
 
@@ -14,23 +15,40 @@ class ChargeForm extends Model {
     public $amount;
     public $date;
     public $category_id;
+    private static $dateFormat = 'php:Y-m-d';
 
-    public function rules(): array {  // TODO: разобраться с датой
+    public function rules(): array {
         return [
-            [['name', 'amount', 'category_id'], 'required'],
+            [['name', 'amount', 'date', 'category_id'], 'required'],
             [['name', 'description'], 'filter', 'filter' => '\yii\helpers\HtmlPurifier::process'],
             ['amount', 'number'],
-            ['date', 'date', 'format' => 'php:Y-m-d'],
+            ['date', 'date', 'format' => self::$dateFormat],
+            ['date', 'notFuture'],
             ['category_id', 'isCategoryBelongsThisUser']
         ];
     }
 
+
+    /**
+     * Checks, is category linked with this charge belongs to authenticated user
+     * @return bool
+     */
     public function isCategoryBelongsThisUser(): bool {
         $category = Category::findOne(['id' => $this->category_id]);
         if (is_null($category)) {
             return false;
         }
         return $category->belongsThisUser();
+    }
+
+    /**
+     * Checks, is date of charge not in future
+     * @return bool
+     */
+    public function notFuture(): bool {
+        $date = DateTime::createFromFormat(self::$dateFormat, $this->date);
+        $today = new DateTime();
+        return $date <= $today;
     }
 
     public function save() {

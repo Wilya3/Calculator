@@ -26,8 +26,8 @@ class LoginForm extends Model {
 	 * Find user with username from DB. Compare password hash from model and from DB.
 	 * @param string $attribute Field from model, which will show an error.
 	 */
-	public function validatePassword($attribute) {
-	    $user = User::findUser($this->username);
+	public function validatePassword(string $attribute) {
+	    $user = User::findOne(['username' => $this->username]);
 	    if (is_null($user) || !password_verify($this->password, $user->password)) {
 	        $this->addError($attribute, "Логин или пароль введены неверно.");
         }

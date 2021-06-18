@@ -57,15 +57,6 @@ class User extends ActiveRecord implements IdentityInterface {
     }
 
     /**
-	 * Get the user from DB by username as ActiveRecord object.
-	 * @param string $username
-	 * @return ActiveRecord|null which represents the user
-	 */
-	public static function findUser($username) {
-        return self::findOne(["username" => $username]);
-    }
-
-    /**
      * Get the user from DB by id as ActiveRecord object.
      * @param string|int $id the ID to be looked for
      * @return ActiveRecord|null the identity object that matches the given ID.

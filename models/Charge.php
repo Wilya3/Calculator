@@ -35,9 +35,13 @@ class Charge extends ActiveRecord {
             ->viaTable('user_category', ['id' => 'user_category_id']);
     }
 
+    /**
+     * Check is category belongs currently authorized user
+     * @return bool is category belongs user
+     */
     public function belongsThisUser(): bool {
-        $user_category = UserCategory::findOne(['id' => $this->user_category_id]);
-        return ($user_category->user_id == Yii::$app->user->getId());
+        $user_category = UserCategory::find()->where(['id' => $this->user_category_id])->asArray()->one();
+        return $user_category['user_id'] == Yii::$app->user->getId();
     }
 
     /**
