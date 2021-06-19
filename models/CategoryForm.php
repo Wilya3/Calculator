@@ -13,14 +13,6 @@ class CategoryForm extends Model {
     public $is_default;  // need for update action
 
 
-//    const SCENARIO_ADD = 'add';
-//
-//    public function scenarios() {
-//        $scenarios = parent::scenarios();
-//        $scenarios[self::SCENARIO_ADD] = ['name', 'description'];
-//        return $scenarios;
-//    }
-
     public function rules(): array {
         return [
             ['name', 'required'],

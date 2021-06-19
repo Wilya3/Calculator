@@ -6,8 +6,11 @@ use app\models\LoginForm;
 use app\models\SignupForm;
 use app\models\User;
 use Yii;
+use yii\base\UserException;
 use yii\filters\AccessControl;
+use yii\web\BadRequestHttpException;
 use yii\web\Controller;
+use yii\web\ForbiddenHttpException;
 use yii\web\Response;
 
 class SiteController extends Controller {
@@ -32,15 +35,7 @@ class SiteController extends Controller {
             ],
         ];
     }  // If any error occurred, redirect to site/index. If logged, redirect to graph/index
-    // TODO: Error handler сделать, "забыли пароль". Добавить "авторов" :)
-
-    /**
-     * If any error occurred, redirect to site/index
-     * @return Response
-     */
-    public function actionError(): Response {
-        return $this->redirect(['site/index']);
-    }
+    // TODO: Сделать "забыли пароль", тесты. Добавить "авторов" :)
 
 	public function actionIndex() {
         if (!Yii::$app->user->isGuest){

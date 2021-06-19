@@ -7,8 +7,11 @@ namespace app\controllers;
 use app\models\Category;
 use app\models\Charge;
 use app\models\ChargeForm;
+use Throwable;
 use Yii;
+use yii\db\StaleObjectException;
 use yii\filters\AccessControl;
+use yii\web\BadRequestHttpException;
 use yii\web\Controller;
 use yii\web\Response;
 
@@ -49,15 +52,14 @@ class ChargeController extends Controller {
     /**
      * Renders charges only for one category, which id is received. Sends charges as array.
      * Before all, checks is this category belongs this user.
-     * If error occurred, sets the flash message into the session
      * @param int $id id of the category, to which the charges are linked
-     * @return string|Response
+     * @return string charge_by_category view
+     * @throws BadRequestHttpException If category is not found or has not any relation with user
      */
-    public function actionChargesByCategory(int $id) {
+    public function actionChargesByCategory(int $id): string {
         $category = Category::findOne(['id' => $id]);
         if (is_null($category) || !$category->belongsThisUser()) {
-            Yii::$app->session->setFlash('error', 'Ошибка! Данной категории не существует!');
-            return $this->goHome();
+            throw new BadRequestHttpException();
         }
         $user_id = Yii::$app->user->getId();
         $charges = Charge::find()  // all charges for this category, which belongs this user
@@ -97,17 +99,16 @@ class ChargeController extends Controller {
     /**
      * Renders form with current charge.
      * If POST - validates (also checks is the category belongs this user), then saves.
-     * If error occurred, sets flash message into the session
      * @param int $id Charge id
      * @return string|Response If success, redirects to charge/charges-by-category
+     * @throws BadRequestHttpException If charge is not found or has not any relation with user
      */
     public function actionChargeUpdate(int $id) {  // TODO: 3 раза user_category вызывается. Можно добавить user_category_entity в модель Charge (?)
         $model = new ChargeForm();
         // charge validate
         $charge = Charge::findOne(['id' => $id]);
         if (is_null($charge) || !$charge->belongsThisUser()) {
-            Yii::$app->session->setFlash('error', 'Ошибка! Данной категории не существует!');
-            return $this->goHome();
+            throw new BadRequestHttpException();
         }
         // if post - charge update
         if ($model->load(Yii::$app->request->post(), 'ChargeForm')) {
@@ -129,21 +130,19 @@ class ChargeController extends Controller {
 
     /**
      * Deletes category. Before deleting validates, is this charge belongs this user.
-     * If error occurred, sets flash message into the session
      * @param int $id Charge id
      * @return Response Redirect to referrer
+     * @throws BadRequestHttpException If charge is not found or has not any relation with user
+     * @throws StaleObjectException if [[optimisticLock|optimistic locking]] is enabled
+     * and the data being deleted is outdated.
+     * @throws Throwable
      */
     public function actionChargeDelete(int $id): Response {
-        try {
-            $charge = Charge::findOne(['id' => $id]);
-            if ($charge->belongsThisUser()) {
-                $charge->delete();
-            }
-        } catch (\Throwable $e) {
-            Yii::$app->session->setFlash('error', 'Ошибка удаления!');
+        $charge = Charge::findOne(['id' => $id]);
+        if (is_null($charge) || !$charge->belongsThisUser()) {
+            throw new BadRequestHttpException();
         }
-        finally {
-            return $this->redirect(Yii::$app->request->referrer ?: Yii::$app->homeUrl);
-        }
+        $charge->delete();
+        return $this->redirect(Yii::$app->request->referrer ?: Yii::$app->homeUrl);
     }
 }

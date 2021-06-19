@@ -7,8 +7,12 @@ use app\models\Category;
 use app\models\CategoryForm;
 use Throwable;
 use Yii;
+use yii\db\Exception;
+use yii\db\StaleObjectException;
 use yii\filters\AccessControl;
+use yii\web\BadRequestHttpException;
 use yii\web\Controller;
+use yii\web\ForbiddenHttpException;
 use yii\web\Response;
 
 
@@ -70,17 +74,19 @@ class CategoryController extends Controller {
     /**
      * Renders category with $id. Changes category if POST.
      * Only a custom category owned by current user can be changed.
-     * Else flash message is saved into the session, nothing is changed
      * @param int $id category id to update
      * @return string|Response redirect home
+     * @throws BadRequestHttpException If category is not found or has not any relation with user
+     * @throws ForbiddenHttpException If category is default
+     * or if it is default category, which cannot be changed
      */
     public function actionCategoryUpdate(int $id) {
         // Check category changing is allowed
         $category = Category::findOne(['id' => $id]);
-        if (is_null($category) || !$category->belongsThisUser() || $category->is_default == 1) {
-            Yii::$app->session->setFlash('error',
-                'Ошибка! Данной категории не существует или ее нельзя изменять');
-            return $this->goHome();
+        if (is_null($category) || !$category->belongsThisUser()) {
+            throw new BadRequestHttpException();
+        } elseif ($category->is_default == 1) {
+            throw new ForbiddenHttpException();
         }
 
         $model = new CategoryForm();
@@ -92,7 +98,7 @@ class CategoryController extends Controller {
                 return $this->goHome();
             }
         }
-        // If GET set old values into the model
+        // If GET-request - set values into the model
         $model->setAttributes($category->attributes);
         return $this->render('category_update', ['model' => $model]);
     }
@@ -100,26 +106,25 @@ class CategoryController extends Controller {
     /**
      * Deletes the relation between this (authorized) user and category with $id.
      * If the category belongs to the user, it will be also deleted from 'category' table.
-     * If error has been caught, sets the flash message into the session.
      * @param int $id category id to delete
      * @return Response redirect home
+     * @throws BadRequestHttpException If category is not found or has not any relation with user
+     * @throws StaleObjectException
+     * @throws Exception
+     * @throws Throwable
      */
     public function actionCategoryDelete(int $id): Response {
-        try {
-            $category = Category::findOne(['id' => $id]);
-            if (!is_null($category) && $category->belongsThisUser()) {
-
-                // delete relation from junction table. Default categories are not deleted, only the relation is removed.
-                $category->unlink('users', Yii::$app->user->identity, true);
-
-                if ($category->is_default == 0) { // if category was created by user, delete it from table Category
-                    $category->delete();
-                }
-            }
-        } catch (Throwable $e) {
-            Yii::$app->session->setFlash('error', 'Ошибка удаления!');
-        } finally {
-            return $this->goHome();
+        // Check category deleting is allowed
+        $category = Category::findOne(['id' => $id]);
+        if (is_null($category) && !$category->belongsThisUser()) {
+            throw new BadRequestHttpException();
         }
+        // delete relation from junction table
+        $category->unlink('users', Yii::$app->user->identity, true);
+
+        if ($category->is_default == 0) { // if category was created by user, delete it from table Category
+            $category->delete();
+        }
+        return $this->goHome();
     }
 }
