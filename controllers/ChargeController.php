@@ -103,7 +103,7 @@ class ChargeController extends Controller {
      * @return string|Response If success, redirects to charge/charges-by-category
      * @throws BadRequestHttpException If charge is not found or has not any relation with user
      */
-    public function actionChargeUpdate(int $id) {  // TODO: 3 раза user_category вызывается. Можно добавить user_category_entity в модель Charge (?)
+    public function actionChargeUpdate(int $id) {
         $model = new ChargeForm();
         // charge validate
         $charge = Charge::findOne(['id' => $id]);

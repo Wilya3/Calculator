@@ -24,16 +24,18 @@ function dateChange() {
     let end_date = new Date(end_date_element.val());
 
     if (start_date == "Invalid Date") {
-        start_date = new Date().toISOString().slice(0, 10);
-        start_date_element.val(start_date);
+        start_date = new Date();
+        start_date_element.val(start_date.toISOString().slice(0, 10));
     }
     if (end_date == "Invalid Date") {
-        end_date = new Date().toISOString().slice(0, 10);
-        end_date_element.val(end_date);
+        end_date = new Date();
+        end_date_element.val(end_date.toISOString().slice(0, 10));
     }
-    if (start_date > end_date) {  // TODO: не во всех случаях работает
-        start_date = end_date.toISOString().slice(0, 10);
-        start_date_element.val(start_date);
+    console.log(start_date > end_date);
+    if (start_date > end_date) {
+        start_date_element.val(end_date.toISOString().slice(0, 10));
+        end_date_element.val(start_date.toISOString().slice(0, 10));
+        start_date = end_date;
     }
 
     createChart(start_date, end_date);

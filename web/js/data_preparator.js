@@ -30,9 +30,10 @@ function getSumByCategory(charges, user_category, categories, start_date, end_da
             result.set(category.name, Math.round(parseFloat(charge.amount)));
         }
     }
+    result = new Map([...result.entries()].sort()); //sort by category name
     return result;
 }
-// TODO: Сортировать по категориям
+
 /**
  * Is date between start_date and end_date
  * @param date Date
@@ -73,7 +74,7 @@ function findCategoryByCharge(charge, user_category, categories) {
  * @param start_date Date
  * @param end_date Date
  * @returns {Map<string, float>} It returns map, which keys contains dates and values contains related sums.
- */  // TODO: Сортировать по дате
+ */
 function getSumByDate(charges, start_date, end_date) {
     let result = new Map();
     for (let charge of charges) {
@@ -81,7 +82,9 @@ function getSumByDate(charges, start_date, end_date) {
         if (!checkDate(rawDate, start_date, end_date)) {
             continue;
         }
-        let date = rawDate.getFullYear()+"-"+(rawDate.getMonth() + 1)+"-"+rawDate.getDate();
+        let date = rawDate.getFullYear() +
+            "-" + ("0"+(rawDate.getMonth()+1)).slice(-2) +
+            "-" + ("0"+(rawDate.getDate())).slice(-2);
 
         if (result.has(date)) {
             let oldSum = result.get(date);
@@ -91,5 +94,6 @@ function getSumByDate(charges, start_date, end_date) {
             result.set(date, Math.round(parseFloat(charge.amount)));
         }
     }
+    result = new Map([...result.entries()].sort()); //sort by date
     return result;
 }

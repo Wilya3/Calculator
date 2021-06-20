@@ -4,6 +4,7 @@
 namespace app\assets;
 
 use yii\web\AssetBundle;
+use yii\web\View;
 
 class ChartAsset extends AssetBundle {
     public $basePath = '@webroot';
