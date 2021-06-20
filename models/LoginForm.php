@@ -14,11 +14,13 @@ class LoginForm extends Model {
 
 	public $username;
 	public $password;
+	public $rememberMe;
 
 	public function rules() {
 		return [
 			[['username', 'password'], 'required'],
-            ['password', 'validatePassword']
+            ['password', 'validatePassword'],
+            ['rememberMe', 'boolean']
 		];
 	}
 

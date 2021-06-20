@@ -6,11 +6,9 @@ use app\models\LoginForm;
 use app\models\SignupForm;
 use app\models\User;
 use Yii;
-use yii\base\UserException;
+use yii\base\Exception;
 use yii\filters\AccessControl;
-use yii\web\BadRequestHttpException;
 use yii\web\Controller;
-use yii\web\ForbiddenHttpException;
 use yii\web\Response;
 
 class SiteController extends Controller {
@@ -44,13 +42,17 @@ class SiteController extends Controller {
 		return $this->render('index');
 	}
 
-	public function actionSignup() {
+
+    /**
+     * @throws Exception If couldn't generate random string for authKey
+     */
+    public function actionSignup() {
         // Registration
 		$model = new SignupForm();
 		if ($model->load(Yii::$app->request->post())) {
 			if ($model->validate()) {
 				$model->save();
-                Yii::$app->user->login(User::findOne(['username' => $model->username]), 3600*24*30);
+                Yii::$app->user->login(User::findOne(['username' => $model->username]));
                 return $this->redirect(['graph/index']);
             }
 		}
@@ -63,7 +65,7 @@ class SiteController extends Controller {
 		if (Yii::$app->request->post('LoginForm')) {
             $model->attributes = Yii::$app->request->post('LoginForm');
             if ($model->validate()) {
-                Yii::$app->user->login(User::findOne(['username' => $model->username]), 3600*24*30);
+                Yii::$app->user->login(User::findOne(['username' => $model->username]), $model->rememberMe ? 3600*24*30 : 0);
                 return $this->redirect(['graph/index']);
             }
         }
@@ -71,7 +73,7 @@ class SiteController extends Controller {
 	}
 
 	public function actionLogout(): Response {
-        Yii::$app->user->logout();
+        Yii::$app->user->logout(true);
         return $this->goHome();
     }
 }

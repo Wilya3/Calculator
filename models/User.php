@@ -13,10 +13,12 @@ use yii\web\IdentityInterface;
  * - username VARCHAR(30) UK
  * - password VARCHAR(255)
  * - email VARCHAR(255) UK
+ * - auth_key VARCHAR(255)
  * @property int id UNSIGNED PK
  * @property string username VARCHAR(30) UK
  * @property string password VARCHAR(255)
  * @property string email VARCHAR(255) UK
+ * @property string auth_key VARCHAR(255)
  */
 class User extends ActiveRecord implements IdentityInterface {
 
@@ -109,7 +111,7 @@ class User extends ActiveRecord implements IdentityInterface {
      */
     public function getAuthKey()
     {
-        // TODO: Implement getAuthKey() method.
+        return $this->auth_key;
     }
 
     /**
@@ -121,6 +123,6 @@ class User extends ActiveRecord implements IdentityInterface {
      */
     public function validateAuthKey($authKey)
     {
-        // TODO: Implement validateAuthKey() method.
+        return $authKey === $this->auth_key;
     }
 }
