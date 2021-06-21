@@ -20,7 +20,9 @@ use yii\helpers\Html;
 	echo $form->field($model, 'password')->passwordInput()->label("Пароль");
 	echo $form->field($model, 'rememberMe')->checkbox()->label("Запомнить меня");
 	echo Html::submitButton('Войти', ['class'=>'btn btn-success']);
-	echo Html::a('Регистрация', 'signup', ['class' => 'btn btn-success']);
+    echo "  /  ";
+	echo Html::a('Регистрация', 'signup');
+    echo "  /  ";
 	echo Html::a('Забыли пароль?', 'send-email');
 	ActiveForm::end();
 	?>

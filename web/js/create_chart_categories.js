@@ -9,6 +9,7 @@ function createChart(start_date="0000-01-01", end_date="") {
     try {
         if (clicked_img_id === "pie") {
             chart.drawChart(preparedCategories, preparedSums, Chart.PIE_OPTIONS, "Сумма по категориям");
+
         }
         if (clicked_img_id === "bar") {
             chart.drawChart(preparedCategories, preparedSums, Chart.BAR_OPTIONS, "Сумма по категориям");
@@ -18,14 +19,22 @@ function createChart(start_date="0000-01-01", end_date="") {
     }
 }
 
-$("#pie").click(function() {
+$("#pie").click(chartImageClick);
+$("#pie").addClass("img-light");
+
+$("#bar").click(chartImageClick);
+
+function chartImageClick() {
+    disableAllImagesLight();
+    this.classList.add("img-light");
+
     clicked_img_id = this.id;
     dateChange();
-});
+}
 
-$("#bar").click(function() {
-    clicked_img_id = this.id;
-    dateChange();
-});
-
-
+function disableAllImagesLight() {
+    let lightElements = $(".img-light");
+    for (const lightElement of lightElements) {
+        lightElement.classList.remove("img-light");
+    }
+}

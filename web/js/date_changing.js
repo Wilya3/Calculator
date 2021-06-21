@@ -31,7 +31,6 @@ function dateChange() {
         end_date = new Date();
         end_date_element.val(end_date.toISOString().slice(0, 10));
     }
-    console.log(start_date > end_date);
     if (start_date > end_date) {
         start_date_element.val(end_date.toISOString().slice(0, 10));
         end_date_element.val(start_date.toISOString().slice(0, 10));

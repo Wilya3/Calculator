@@ -26,8 +26,6 @@ class Chart {
      * @throws ValueError
      */
     drawChart(keys, values, options, title = "") {
-        console.log(keys);
-        console.log(values);
         options.title.text = title;
         if (options.chart.type === "pie") {
             // Checks if values are valid for pie chart.
@@ -43,12 +41,9 @@ class Chart {
         if (this.entity != null) {
             this.entity.destroy();
         }
-        console.log("values");
-        console.log(values);
         if (Chart.isValuesEqualsZero(values)) {
             throw new ValueError("The chart cannot be drawn with empty data");
         }
-        console.log("Рисую график")
         this.entity = new ApexCharts(this.element, options);
         this.entity.render();
 

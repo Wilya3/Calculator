@@ -1,10 +1,8 @@
-<h1>Главная</h1>
-<!--<a href="/web/index.php?r=site%2Fsignup">Регистрация</a>-->
 
-<div>
+<div class="text-center" text-align="center">
     <h2>Войдите, чтобы воспользоваться</h2>
-    <p>жс должен переключать формы или как? А что с контроллером делать? Как две разные функции запихнуть
-    в один action?</p>
+    <h3>Регистрация в пару кликов!</h3>
+    <?= \yii\helpers\Html::a('Зарегистрироваться', ['site/signup'], ['class' => 'btn btn-success']) ?>
 </div>
 
 

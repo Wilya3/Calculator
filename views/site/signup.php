@@ -19,7 +19,8 @@ use yii\helpers\HTML;
 	echo $form->field($model, 'email')->label("E-mail");
 	echo $form->field($model, 'password')->passwordInput()->label("Пароль");
 	echo Html::submitButton('Зарегистрироваться', ['class'=>'btn btn-success']);
-    echo Html::a('Вход', 'login', ['class' => 'btn btn-success']);
+    echo "  /  ";
+    echo Html::a('Вход', 'login');
 	ActiveForm::end();
 	?>
 </div>

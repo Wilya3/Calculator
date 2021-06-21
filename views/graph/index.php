@@ -54,8 +54,14 @@ if (Yii::$app->session->hasFlash('error')) {
     </div>
 </div>
 <div id="chart" style="width='100%'"></div>
+
+<style>
+    .img-light{
+        filter: drop-shadow(0 0 5px #000000);
+    }
+</style>
 <div class="row">
-    <img id="pie" class="col" src="/img/pie.png" height="100" width="100" alt="">
+    <img id="pie" class="col" src="/img/pie.png" height="127" width="127" alt="">
     <img id="bar" class="col" src="/img/bar.png" height="127" width="200" alt="" hspace="10">
 </div>
 

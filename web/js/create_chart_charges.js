@@ -2,7 +2,6 @@ const element = document.querySelector("#chart")
 const chart = new Chart(element);
 
 function createChart(start_date, end_date) {
-    console.log(charges);
     const result = getSumByDate(charges, start_date, end_date);
     let preparedDates = Array.from(result.keys());
     let preparedCharges = Array.from(result.values());
