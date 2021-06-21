@@ -30,7 +30,9 @@ class Chart {
         console.log(values);
         options.title.text = title;
         if (options.chart.type === "pie") {
-            Chart.deleteNegativeValues(values);
+            // Checks if values are valid for pie chart.
+            // Pie chart cannot work with negative values
+            Chart.absoluteNegativeValues(values);
             options.series = values;
             options.labels = keys;
         } else {
@@ -54,15 +56,13 @@ class Chart {
     }
 
     /**
-     * Changes negative values to zero.
-     * Checks if these values are valid for pie type of chart.
-     * Pie chart cannot work with negative values
+     * Changes negative numbers to their absolute values.
      * @param values array of floats
      */
-    static deleteNegativeValues(values) {
+    static absoluteNegativeValues(values) {
         for (let i = 0; i < values.length; i++) {
             if (values[i] < 0) {
-                values[i] = 0;
+                values[i] *= -1;
             }
         }
     }

@@ -1,5 +1,9 @@
 <?php
-
+/**
+ * @var $charges app\models\Charge
+ * @var $user_category app\models\UserCategory
+ * @var $categories app\models\Category
+ */
 use app\assets\ChartCategoriesAsset;
 use kartik\date\DatePicker;
 

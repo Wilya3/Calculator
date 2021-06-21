@@ -1,4 +1,7 @@
 <?php
+/**
+ * @var $model app\models\LoginForm
+ */
 use yii\bootstrap\ActiveForm;
 use yii\helpers\Html;
 ?>
@@ -18,6 +21,7 @@ use yii\helpers\Html;
 	echo $form->field($model, 'rememberMe')->checkbox()->label("Запомнить меня");
 	echo Html::submitButton('Войти', ['class'=>'btn btn-success']);
 	echo Html::a('Регистрация', 'signup', ['class' => 'btn btn-success']);
+	echo Html::a('Забыли пароль?', 'send-email');
 	ActiveForm::end();
 	?>
 </div>

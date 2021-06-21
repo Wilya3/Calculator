@@ -14,11 +14,13 @@ use yii\web\IdentityInterface;
  * - password VARCHAR(255)
  * - email VARCHAR(255) UK
  * - auth_key VARCHAR(255)
+ * - secret_key VARCHAR(255) email validation
  * @property int id UNSIGNED PK
  * @property string username VARCHAR(30) UK
  * @property string password VARCHAR(255)
  * @property string email VARCHAR(255) UK
  * @property string auth_key VARCHAR(255)
+ * @property string secret_key VARCHAR(255)
  */
 class User extends ActiveRecord implements IdentityInterface {
 

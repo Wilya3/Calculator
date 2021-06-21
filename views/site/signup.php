@@ -1,4 +1,7 @@
 <?php
+/**
+ * @var $model app\models\SignupForm
+ */
 use yii\bootstrap\ActiveForm;
 use yii\helpers\HTML;
 ?>

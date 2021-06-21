@@ -5,6 +5,7 @@ namespace app\controllers;
 
 
 use Yii;
+use yii\base\InvalidArgumentException;
 use yii\web\BadRequestHttpException;
 use yii\web\Controller;
 use yii\web\ForbiddenHttpException;
@@ -26,9 +27,15 @@ class ErrorController extends Controller {
             Yii::$app->session->setFlash('error', "Ошибка! Неверный адрес!");
         } elseif ($exception instanceof ForbiddenHttpException) {
             Yii::$app->session->setFlash('error', "Ошибка! У Вас нет доступа!");
+        } elseif ($exception instanceof InvalidEmailException) {
+            Yii::$app->session->setFlash('error', "Ошибка! Неверный Email!");
         }
 
         // Fatal error
+//        elseif ($exception instanceof InvalidArgumentException) {
+//            Yii::warning($exception->getMessage() . $exception->getTraceAsString());
+//            Yii::$app->session->setFlash('error', "Ошибка! Получены неверные данные");
+//        }
         elseif ($exception instanceof yii\db\Exception) {
             Yii::error($exception->getMessage() . $exception->getTraceAsString());
             Yii::$app->session->setFlash('error', "Критическая ошибка работы сервера! Мы уже работаем над этим!");

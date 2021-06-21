@@ -1,5 +1,8 @@
 <?php
-
+/**
+ * @var $categories app\models\Category
+ * @var $model app\models\ChargeForm
+ */
 use kartik\date\DatePicker;
 use yii\helpers\ArrayHelper;
 use yii\helpers\Html;

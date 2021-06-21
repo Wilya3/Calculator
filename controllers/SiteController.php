@@ -3,17 +3,22 @@
 namespace app\controllers;
 
 use app\models\LoginForm;
+use app\models\ResetPasswordForm;
+use app\models\SendEmailForm;
 use app\models\SignupForm;
 use app\models\User;
+use PharIo\Manifest\InvalidEmailException;
 use Yii;
 use yii\base\Exception;
+use yii\base\InvalidArgumentException;
 use yii\filters\AccessControl;
 use yii\web\Controller;
+use yii\web\NotFoundHttpException;
 use yii\web\Response;
 
 class SiteController extends Controller {
 
-    public function behaviors() {
+    public function behaviors(): array {
         return [
             'access' => [
                 'class' => AccessControl::class,
@@ -21,7 +26,7 @@ class SiteController extends Controller {
                 'rules' => [
                     [
                         'allow' => true,
-                        'actions' => ['login', 'signup'],
+                        'actions' => ['login', 'signup', 'send-email', 'reset-password'],
                         'roles' => ['?'],
                     ],
                     [
@@ -33,7 +38,7 @@ class SiteController extends Controller {
             ],
         ];
     }  // If any error occurred, redirect to site/index. If logged, redirect to graph/index
-    // TODO: Сделать "забыли пароль", тесты. Добавить "авторов" :)
+    // TODO: Сделать тесты. Добавить "авторов" :)
 
 	public function actionIndex() {
         if (!Yii::$app->user->isGuest){
@@ -75,5 +80,45 @@ class SiteController extends Controller {
 	public function actionLogout(): Response {
         Yii::$app->user->logout(true);
         return $this->goHome();
+    }
+
+    /**
+     * @throws InvalidEmailException If email is not found
+     * @throws Exception If secret_key generating error
+     */
+    public function actionSendEmail() {
+        $model = new SendEmailForm();
+        if ($model->load(Yii::$app->request->post())) {
+            if ($model->validate()) {
+                if ($model->sendEmail()) {
+                    Yii::$app->session->setFlash('success',
+                        "Проверьте почту. На нее отправлено письмо с дальнейшими инструкциями");
+                    return $this->refresh();
+                } else {
+                    throw new InvalidEmailException;
+                }
+            }
+        }
+        return $this->render('send_email', ['model' => $model]);
+    }
+
+    /**
+     * @param string $key secret_key, which is used for validation before password reset
+     * @return string|Response go login if success
+     * @throws NotFoundHttpException if key is null
+     */
+    public function actionResetPassword(string $key) {
+        if (is_null($key)) {
+            throw new NotFoundHttpException();
+        }
+        $model = new ResetPasswordForm();
+        if ($model->load(Yii::$app->request->post())) {
+            if ($model->validate()) {
+                $model->resetPassword($key);
+                Yii::$app->session->setFlash('success', "Пароль успешно изменен");
+                return $this->redirect(['site/login']);
+            }
+        }
+        return $this->render('reset_password', ['model' => $model]);
     }
 }

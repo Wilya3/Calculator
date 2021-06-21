@@ -1,4 +1,8 @@
 <?php
+/**
+ * @var $charges app\models\Charge
+ * @var $category app\models\Category
+ */
 use yii\data\ArrayDataProvider;
 use yii\grid\GridView;
 use yii\widgets\Pjax;
@@ -61,6 +65,7 @@ $gridOptions = [
                 if ($action === 'delete') {
                     return "charge-delete?id={$model['id']}";
                 }
+                return "";
             }
         ],
     ],
