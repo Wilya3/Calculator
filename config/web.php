@@ -25,14 +25,23 @@ $config = [
             'enableAutoLogin' => true,
         ],
         'errorHandler' => [
-            'errorAction' => 'site/error',
+            'errorAction' => 'error/index',
         ],
         'mailer' => [
             'class' => 'yii\swiftmailer\Mailer',
+//            'viewPath' => '@app/mail',
+//            'transport' => [
+//                'class' => 'Swift_SmtpTransport',
+//                'host' => 'smtp.yandex.ru',
+//                'username' => '<username>@<yourDomain>',
+//                'password' => '<userPassword>',
+//                'port' => 465,
+//                'encryption' => 'ssl',
             // send all mails to a file by default. You have to set
             // 'useFileTransport' to false and configure a transport
             // for the mailer to send real emails.
             'useFileTransport' => true,
+
         ],
         'log' => [
             'traceLevel' => YII_DEBUG ? 3 : 0,
@@ -45,9 +54,26 @@ $config = [
         ],
         'urlManager' => [
             'enablePrettyUrl' => true,
-            'showScriptName' => false
+            'showScriptName' => false,
+            'rules' => [
+                [
+                    'pattern' => 'charge/charge-add',
+                    'route' => 'charge/charge-add',
+                ],
+                [
+                    'pattern' => 'charge/charge-add?category_id=<category_id:\d+>',
+                    'route' => 'charge/charge-add',
+                ],
+            ],
         ],
         'db' => $db,
+        'assetManager' => [
+            'bundles' => [
+                'yii\web\JqueryAsset'=> [
+                    'jsOptions' => ['position' => yii\web\View::POS_HEAD],
+                ],
+            ],
+        ],
     ],
     'params' => $params,
 ];

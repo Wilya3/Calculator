@@ -3,7 +3,7 @@
 
 namespace app\models;
 
-use \yii\base\Model;
+use yii\base\Model;
 
 
 /**
@@ -14,11 +14,13 @@ class LoginForm extends Model {
 
 	public $username;
 	public $password;
+	public $rememberMe;
 
 	public function rules() {
 		return [
 			[['username', 'password'], 'required'],
-            ['password', 'validatePassword']
+            ['password', 'validatePassword'],
+            ['rememberMe', 'boolean']
 		];
 	}
 
@@ -26,12 +28,10 @@ class LoginForm extends Model {
 	 * Find user with username from DB. Compare password hash from model and from DB.
 	 * @param string $attribute Field from model, which will show an error.
 	 */
-	public function validatePassword($attribute) {
-	    $user = User::findUser($this->username);
+	public function validatePassword(string $attribute) {
+	    $user = User::findOne(['username' => $this->username]);
 	    if (is_null($user) || !password_verify($this->password, $user->password)) {
 	        $this->addError($attribute, "Логин или пароль введены неверно.");
         }
-//	    print_r($user);
-//	    die();
     }
 }

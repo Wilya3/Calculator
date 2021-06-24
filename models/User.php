@@ -3,22 +3,45 @@
 
 namespace app\models;
 
-use yii\base\InvalidConfigException;
+use yii\db\ActiveQuery;
 use yii\db\ActiveRecord;
 use yii\web\IdentityInterface;
 
 /**
  * Table 'user' from DB 'calculator'
- * id INT UNSIGNED PK
- * username VARCHAR(30) UK
- * password VARCHAR(255)
- * email VARCHAR(255) UK
+ * - id UNSIGNED PK
+ * - username VARCHAR(30) UK
+ * - password VARCHAR(255)
+ * - email VARCHAR(255) UK
+ * - auth_key VARCHAR(255)
+ * - secret_key VARCHAR(255) email validation
+ * @property int id UNSIGNED PK
+ * @property string username VARCHAR(30) UK
+ * @property string password VARCHAR(255)
+ * @property string email VARCHAR(255) UK
+ * @property string auth_key VARCHAR(255)
+ * @property string secret_key VARCHAR(255)
  */
 class User extends ActiveRecord implements IdentityInterface {
 
-    public function getCategories() {
+    public function getCategories(): ActiveQuery {
 	    return $this->hasMany(Category::class, ['id' => 'category_id'])
             ->viaTable('user_category', ['user_id' => 'id']);
+    }
+
+    public function getCategoriesAsArray(): array {
+        return $this->hasMany(Category::class, ['id' => 'category_id'])
+            ->viaTable('user_category', ['user_id' => 'id'])->asArray()->all();
+    }
+
+    public function getCharges(): ActiveQuery {
+        return $this->hasMany(Charge::class, ['user_category_id' => 'id'])
+            ->viaTable('user_category', ['user_id' => 'id'])->with('category');
+    }
+
+    public function getChargesAsArray(): array {
+        return $this->hasMany(Charge::class, ['user_category_id' => 'id'])
+            ->viaTable('user_category', ['user_id' => 'id'])->asArray()->all();
     }
 
     /**
@@ -35,15 +58,6 @@ class User extends ActiveRecord implements IdentityInterface {
                 $this->link('categories', $category);
             }
         }
-    }
-
-    /**
-	 * Get the user from DB by username as ActiveRecord object.
-	 * @param string $username
-	 * @return ActiveRecord|null which represents the user
-	 */
-	public static function findUser($username) {
-        return self::findOne(["username" => $username]);
     }
 
     /**
@@ -99,7 +113,7 @@ class User extends ActiveRecord implements IdentityInterface {
      */
     public function getAuthKey()
     {
-        // TODO: Implement getAuthKey() method.
+        return $this->auth_key;
     }
 
     /**
@@ -111,6 +125,6 @@ class User extends ActiveRecord implements IdentityInterface {
      */
     public function validateAuthKey($authKey)
     {
-        // TODO: Implement validateAuthKey() method.
+        return $authKey === $this->auth_key;
     }
 }
